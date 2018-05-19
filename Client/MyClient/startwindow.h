@@ -3,6 +3,8 @@
 
 #include <QDialog>
 #include <QTcpSocket>
+#include <QHostAddress>
+#include <QDebug>
 #include "signupwindow.h"
 #include "myclient.h"
 
@@ -10,8 +12,7 @@ namespace Ui {
 class StartWindow;
 }
 
-class StartWindow : public QDialog
-{
+class StartWindow : public QDialog {
     Q_OBJECT
 
 public:
