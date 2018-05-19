@@ -3,19 +3,37 @@
 
 #include <QThread>
 #include <QTcpSocket>
+#include <QDataStream>
+#include <QString>
+#include <QtSql>
+#include <QSqlDatabase>
+#include <QSqlQuery>
+#include <QSqlError>
+#include <QSqlTableModel>
 
-class MyThreadSocket : public QThread
-{
+enum MessageCode {
+    SignIn = 11
+};
+
+class MyThreadSocket : public QThread {
     Q_OBJECT
 
 public:
-    MyThreadSocket(int socketDescriptor, QObject * parent = 0);
+    MyThreadSocket(qintptr handle, QObject * parent = 0);
     ~MyThreadSocket();
 
+protected:
+    void run() Q_DECL_OVERRIDE;
+
 private:
-    int socketDescriptor;
+    quint16 nextBlockSize;
+    qintptr myDescriptor;
+    QString message;
     QTcpSocket * socket;
-    void run();
+    int messageCode;
+    QSqlDatabase usersDB;
+    void getMessage();
+    void checkInDB();
 
 private slots:
     void slotReadyRead();

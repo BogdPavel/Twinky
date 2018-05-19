@@ -1,18 +1,17 @@
 #include "myserver.h"
 
-MyServer::MyServer(QObject * parent):
-    QTcpServer(parent)
-{
-    if(listen(QHostAddress::Any, 80)) {
-
+MyServer::MyServer(QObject * parent): QTcpServer(parent) {
+    if(this->listen(QHostAddress::Any, 2323)) {
+        qDebug() << "Listening port " << this->serverPort();
     }
     else {
-
+        qDebug() << "No Listening";
     }
 }
 
-void MyServer::incomingConnection(int handle)
+void MyServer::incomingConnection(qintptr handle)
 {
+    qDebug() << "User has ben connected";
     MyThreadSocket * threadSocket = new MyThreadSocket(handle);
     connect(threadSocket, SIGNAL(finished()),
             threadSocket, SLOT(deleteLater()));

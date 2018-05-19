@@ -1,20 +1,16 @@
 #ifndef MYSERVER_H
 #define MYSERVER_H
 
+#include <QDebug>
 #include <QTcpServer>
-#include <QString>
 #include "mythreadsocket.h"
 
-class MyServer : public QTcpServer
-{
-
+class MyServer: public QTcpServer {
     Q_OBJECT
 
 public:
     MyServer(QObject * parent = 0);
-
-private:
-    void incomingConnection(int handle);
+    void incomingConnection(qintptr handle) Q_DECL_OVERRIDE;
 
 };
 
