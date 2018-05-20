@@ -5,6 +5,7 @@
 #include <QTcpSocket>
 
 const QString CheckUsernameAndPassword("11");
+const QString SignUpNewUser("13");
 
 namespace Ui {
 class MyClient;

@@ -1,0 +1,12 @@
+INPUT(
+./debug\main.o
+./debug\myclient.o
+./debug\signupwindow.o
+./debug\startwindow.o
+./debug\smtp.o
+./debug\qrc_images.o
+./debug\moc_myclient.o
+./debug\moc_signupwindow.o
+./debug\moc_startwindow.o
+./debug\moc_smtp.o
+);

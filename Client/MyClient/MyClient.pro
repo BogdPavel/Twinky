@@ -17,12 +17,14 @@ SOURCES += \
         main.cpp \
     myclient.cpp \
     signupwindow.cpp \
-    startwindow.cpp
+    startwindow.cpp \
+    smtp.cpp
 
 HEADERS += \
     myclient.h \
     signupwindow.h \
-    startwindow.h
+    startwindow.h \
+    smtp.h
 
 RESOURCES += \
     images.qrc
