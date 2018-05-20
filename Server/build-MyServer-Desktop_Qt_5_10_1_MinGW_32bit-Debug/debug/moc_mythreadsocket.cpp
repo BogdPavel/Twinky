@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mythreadsocket.h'
 **
-** Created by: The Qt Meta Object Compiler version 67 (Qt 5.9.0)
+** Created by: The Qt Meta Object Compiler version 67 (Qt 5.10.1)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
@@ -12,7 +12,7 @@
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'mythreadsocket.h' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 67
-#error "This file was generated using the moc from 5.9.0. It"
+#error "This file was generated using the moc from 5.10.1. It"
 #error "cannot be used with the include files from this version of Qt."
 #error "(The moc has changed too much.)"
 #endif
@@ -80,7 +80,7 @@ void MyThreadSocket::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _
     Q_UNUSED(_a);
 }
 
-const QMetaObject MyThreadSocket::staticMetaObject = {
+QT_INIT_METAOBJECT const QMetaObject MyThreadSocket::staticMetaObject = {
     { &QThread::staticMetaObject, qt_meta_stringdata_MyThreadSocket.data,
       qt_meta_data_MyThreadSocket,  qt_static_metacall, nullptr, nullptr}
 };
@@ -95,7 +95,7 @@ void *MyThreadSocket::qt_metacast(const char *_clname)
 {
     if (!_clname) return nullptr;
     if (!strcmp(_clname, qt_meta_stringdata_MyThreadSocket.stringdata0))
-        return static_cast<void*>(const_cast< MyThreadSocket*>(this));
+        return static_cast<void*>(this);
     return QThread::qt_metacast(_clname);
 }
 
