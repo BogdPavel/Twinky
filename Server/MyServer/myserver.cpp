@@ -9,8 +9,7 @@ MyServer::MyServer(QObject * parent): QTcpServer(parent) {
     }
 }
 
-void MyServer::incomingConnection(qintptr handle)
-{
+void MyServer::incomingConnection(qintptr handle) {
     qDebug() << "User has ben connected";
     MyThreadSocket * threadSocket = new MyThreadSocket(handle);
     connect(threadSocket, SIGNAL(finished()),

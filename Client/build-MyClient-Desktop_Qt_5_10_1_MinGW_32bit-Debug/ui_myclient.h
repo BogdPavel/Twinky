@@ -31,16 +31,17 @@ class Ui_MyClient
 public:
     QAction *actionfghngf;
     QWidget *centralwidget;
-    QPushButton *pushButton_11;
+    QPushButton *logOutButton;
     QGroupBox *groupBox_2;
     QGroupBox *groupBox_3;
+    QWidget *widget;
+    QVBoxLayout *verticalLayout_3;
     QLabel *label_10;
-    QWidget *layoutWidget;
     QHBoxLayout *horizontalLayout_7;
     QSpacerItem *horizontalSpacer_3;
-    QPushButton *pushButton_10;
+    QPushButton *membersNumberButton;
     QLineEdit *lineEdit;
-    QPushButton *pushButton_8;
+    QPushButton *searchMessagesButton;
     QLabel *label_9;
     QGroupBox *groupBox_4;
     QGroupBox *groupBox_5;
@@ -52,7 +53,7 @@ public:
     QLabel *label;
     QHBoxLayout *horizontalLayout;
     QLabel *label_3;
-    QPushButton *pushButton;
+    QPushButton *setProfilePhotoButton;
     QWidget *layoutWidget_4;
     QHBoxLayout *horizontalLayout_6;
     QLabel *label_8;
@@ -60,35 +61,35 @@ public:
     QWidget *layoutWidget_5;
     QHBoxLayout *horizontalLayout_5;
     QLabel *label_4;
-    QPushButton *pushButton_3;
+    QPushButton *usernameButton;
     QWidget *layoutWidget_6;
     QHBoxLayout *horizontalLayout_3;
     QLabel *label_6;
-    QPushButton *pushButton_5;
+    QPushButton *emailButton;
     QWidget *layoutWidget_7;
     QHBoxLayout *horizontalLayout_2;
     QLabel *label_7;
-    QPushButton *pushButton_6;
+    QPushButton *bioButton;
     QWidget *layoutWidget_8;
     QHBoxLayout *horizontalLayout_4;
     QLabel *label_5;
-    QPushButton *pushButton_4;
+    QPushButton *mobileButton;
     QWidget *layoutWidget_9;
     QVBoxLayout *verticalLayout_2;
     QLabel *label_2;
-    QPushButton *pushButton_2;
+    QPushButton *nameSurnameButton;
     QLabel *label_11;
     QWidget *layoutWidget_10;
     QHBoxLayout *horizontalLayout_9;
     QLabel *label_12;
     QPushButton *notificationsButton;
     QPushButton *clearHistoryButton;
-    QWidget *layoutWidget1;
+    QWidget *layoutWidget;
     QHBoxLayout *horizontalLayout_8;
     QLabel *label_16;
     QLabel *label_17;
-    QPushButton *pushButton_12;
-    QPushButton *pushButton_13;
+    QPushButton *settingsButton;
+    QPushButton *aboutButton;
 
     void setupUi(QMainWindow *MyClient)
     {
@@ -100,15 +101,15 @@ public:
         actionfghngf->setObjectName(QStringLiteral("actionfghngf"));
         centralwidget = new QWidget(MyClient);
         centralwidget->setObjectName(QStringLiteral("centralwidget"));
-        pushButton_11 = new QPushButton(centralwidget);
-        pushButton_11->setObjectName(QStringLiteral("pushButton_11"));
-        pushButton_11->setGeometry(QRect(730, 1, 55, 20));
-        pushButton_11->setMinimumSize(QSize(55, 20));
-        pushButton_11->setMaximumSize(QSize(55, 20));
+        logOutButton = new QPushButton(centralwidget);
+        logOutButton->setObjectName(QStringLiteral("logOutButton"));
+        logOutButton->setGeometry(QRect(730, 1, 55, 20));
+        logOutButton->setMinimumSize(QSize(55, 20));
+        logOutButton->setMaximumSize(QSize(55, 20));
         QFont font;
         font.setPointSize(10);
-        pushButton_11->setFont(font);
-        pushButton_11->setStyleSheet(QLatin1String("border: none;\n"
+        logOutButton->setFont(font);
+        logOutButton->setStyleSheet(QLatin1String("border: none;\n"
 "color: grey;"));
         groupBox_2 = new QGroupBox(centralwidget);
         groupBox_2->setObjectName(QStringLiteral("groupBox_2"));
@@ -118,50 +119,59 @@ public:
         groupBox_3->setObjectName(QStringLiteral("groupBox_3"));
         groupBox_3->setGeometry(QRect(150, 0, 460, 60));
         groupBox_3->setStyleSheet(QStringLiteral(""));
-        label_10 = new QLabel(groupBox_3);
+        widget = new QWidget(groupBox_3);
+        widget->setObjectName(QStringLiteral("widget"));
+        widget->setGeometry(QRect(10, 10, 441, 43));
+        verticalLayout_3 = new QVBoxLayout(widget);
+        verticalLayout_3->setObjectName(QStringLiteral("verticalLayout_3"));
+        verticalLayout_3->setContentsMargins(0, 0, 0, 0);
+        label_10 = new QLabel(widget);
         label_10->setObjectName(QStringLiteral("label_10"));
-        label_10->setGeometry(QRect(0, 10, 460, 16));
+        label_10->setMinimumSize(QSize(440, 0));
+        label_10->setMaximumSize(QSize(440, 16777215));
         label_10->setStyleSheet(QStringLiteral("background: none"));
         label_10->setAlignment(Qt::AlignCenter);
-        layoutWidget = new QWidget(groupBox_3);
-        layoutWidget->setObjectName(QStringLiteral("layoutWidget"));
-        layoutWidget->setGeometry(QRect(10, 30, 441, 22));
-        horizontalLayout_7 = new QHBoxLayout(layoutWidget);
+
+        verticalLayout_3->addWidget(label_10);
+
+        horizontalLayout_7 = new QHBoxLayout();
         horizontalLayout_7->setSpacing(4);
         horizontalLayout_7->setObjectName(QStringLiteral("horizontalLayout_7"));
-        horizontalLayout_7->setContentsMargins(0, 0, 0, 0);
         horizontalSpacer_3 = new QSpacerItem(188, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
         horizontalLayout_7->addItem(horizontalSpacer_3);
 
-        pushButton_10 = new QPushButton(layoutWidget);
-        pushButton_10->setObjectName(QStringLiteral("pushButton_10"));
-        pushButton_10->setMinimumSize(QSize(70, 20));
-        pushButton_10->setMaximumSize(QSize(70, 20));
+        membersNumberButton = new QPushButton(widget);
+        membersNumberButton->setObjectName(QStringLiteral("membersNumberButton"));
+        membersNumberButton->setMinimumSize(QSize(70, 20));
+        membersNumberButton->setMaximumSize(QSize(70, 20));
         QFont font1;
         font1.setUnderline(true);
-        pushButton_10->setFont(font1);
-        pushButton_10->setStyleSheet(QLatin1String("border: none;\n"
+        membersNumberButton->setFont(font1);
+        membersNumberButton->setStyleSheet(QLatin1String("border: none;\n"
 "color: grey;"));
 
-        horizontalLayout_7->addWidget(pushButton_10);
+        horizontalLayout_7->addWidget(membersNumberButton);
 
-        lineEdit = new QLineEdit(layoutWidget);
+        lineEdit = new QLineEdit(widget);
         lineEdit->setObjectName(QStringLiteral("lineEdit"));
         lineEdit->setMinimumSize(QSize(130, 20));
         lineEdit->setMaximumSize(QSize(130, 20));
 
         horizontalLayout_7->addWidget(lineEdit);
 
-        pushButton_8 = new QPushButton(layoutWidget);
-        pushButton_8->setObjectName(QStringLiteral("pushButton_8"));
-        pushButton_8->setMinimumSize(QSize(50, 20));
-        pushButton_8->setMaximumSize(QSize(50, 20));
-        pushButton_8->setStyleSheet(QLatin1String("color:white;\n"
+        searchMessagesButton = new QPushButton(widget);
+        searchMessagesButton->setObjectName(QStringLiteral("searchMessagesButton"));
+        searchMessagesButton->setMinimumSize(QSize(50, 20));
+        searchMessagesButton->setMaximumSize(QSize(50, 20));
+        searchMessagesButton->setStyleSheet(QLatin1String("color:white;\n"
 "border-radius: 10px;\n"
 "background-color: grey;"));
 
-        horizontalLayout_7->addWidget(pushButton_8);
+        horizontalLayout_7->addWidget(searchMessagesButton);
+
+
+        verticalLayout_3->addLayout(horizontalLayout_7);
 
         label_9 = new QLabel(groupBox_2);
         label_9->setObjectName(QStringLiteral("label_9"));
@@ -216,15 +226,15 @@ public:
 
         horizontalLayout->addWidget(label_3);
 
-        pushButton = new QPushButton(layoutWidget_2);
-        pushButton->setObjectName(QStringLiteral("pushButton"));
-        pushButton->setMinimumSize(QSize(90, 20));
-        pushButton->setMaximumSize(QSize(90, 20));
-        pushButton->setStyleSheet(QLatin1String("color:white;\n"
+        setProfilePhotoButton = new QPushButton(layoutWidget_2);
+        setProfilePhotoButton->setObjectName(QStringLiteral("setProfilePhotoButton"));
+        setProfilePhotoButton->setMinimumSize(QSize(90, 20));
+        setProfilePhotoButton->setMaximumSize(QSize(90, 20));
+        setProfilePhotoButton->setStyleSheet(QLatin1String("color:white;\n"
 "border-radius: 10px;\n"
 "background-color:blue;"));
 
-        horizontalLayout->addWidget(pushButton);
+        horizontalLayout->addWidget(setProfilePhotoButton);
 
 
         verticalLayout->addLayout(horizontalLayout);
@@ -268,15 +278,15 @@ public:
 
         horizontalLayout_5->addWidget(label_4);
 
-        pushButton_3 = new QPushButton(layoutWidget_5);
-        pushButton_3->setObjectName(QStringLiteral("pushButton_3"));
-        pushButton_3->setMinimumSize(QSize(70, 20));
-        pushButton_3->setMaximumSize(QSize(70, 20));
-        pushButton_3->setStyleSheet(QLatin1String("color:blue;\n"
+        usernameButton = new QPushButton(layoutWidget_5);
+        usernameButton->setObjectName(QStringLiteral("usernameButton"));
+        usernameButton->setMinimumSize(QSize(70, 20));
+        usernameButton->setMaximumSize(QSize(70, 20));
+        usernameButton->setStyleSheet(QLatin1String("color:blue;\n"
 "border:none;\n"
 "text-align:left;"));
 
-        horizontalLayout_5->addWidget(pushButton_3);
+        horizontalLayout_5->addWidget(usernameButton);
 
         layoutWidget_6 = new QWidget(groupBox_2);
         layoutWidget_6->setObjectName(QStringLiteral("layoutWidget_6"));
@@ -292,15 +302,15 @@ public:
 
         horizontalLayout_3->addWidget(label_6);
 
-        pushButton_5 = new QPushButton(layoutWidget_6);
-        pushButton_5->setObjectName(QStringLiteral("pushButton_5"));
-        pushButton_5->setMinimumSize(QSize(94, 20));
-        pushButton_5->setMaximumSize(QSize(94, 20));
-        pushButton_5->setStyleSheet(QLatin1String("color:blue;\n"
+        emailButton = new QPushButton(layoutWidget_6);
+        emailButton->setObjectName(QStringLiteral("emailButton"));
+        emailButton->setMinimumSize(QSize(94, 20));
+        emailButton->setMaximumSize(QSize(94, 20));
+        emailButton->setStyleSheet(QLatin1String("color:blue;\n"
 "border:none;\n"
 "text-align:left;"));
 
-        horizontalLayout_3->addWidget(pushButton_5);
+        horizontalLayout_3->addWidget(emailButton);
 
         layoutWidget_7 = new QWidget(groupBox_2);
         layoutWidget_7->setObjectName(QStringLiteral("layoutWidget_7"));
@@ -316,15 +326,15 @@ public:
 
         horizontalLayout_2->addWidget(label_7);
 
-        pushButton_6 = new QPushButton(layoutWidget_7);
-        pushButton_6->setObjectName(QStringLiteral("pushButton_6"));
-        pushButton_6->setMinimumSize(QSize(109, 20));
-        pushButton_6->setMaximumSize(QSize(109, 20));
-        pushButton_6->setStyleSheet(QLatin1String("color:blue;\n"
+        bioButton = new QPushButton(layoutWidget_7);
+        bioButton->setObjectName(QStringLiteral("bioButton"));
+        bioButton->setMinimumSize(QSize(109, 20));
+        bioButton->setMaximumSize(QSize(109, 20));
+        bioButton->setStyleSheet(QLatin1String("color:blue;\n"
 "border:none;\n"
 "text-align:left;"));
 
-        horizontalLayout_2->addWidget(pushButton_6);
+        horizontalLayout_2->addWidget(bioButton);
 
         layoutWidget_8 = new QWidget(groupBox_2);
         layoutWidget_8->setObjectName(QStringLiteral("layoutWidget_8"));
@@ -340,15 +350,15 @@ public:
 
         horizontalLayout_4->addWidget(label_5);
 
-        pushButton_4 = new QPushButton(layoutWidget_8);
-        pushButton_4->setObjectName(QStringLiteral("pushButton_4"));
-        pushButton_4->setMinimumSize(QSize(90, 20));
-        pushButton_4->setMaximumSize(QSize(90, 20));
-        pushButton_4->setStyleSheet(QLatin1String("color:blue;\n"
+        mobileButton = new QPushButton(layoutWidget_8);
+        mobileButton->setObjectName(QStringLiteral("mobileButton"));
+        mobileButton->setMinimumSize(QSize(90, 20));
+        mobileButton->setMaximumSize(QSize(90, 20));
+        mobileButton->setStyleSheet(QLatin1String("color:blue;\n"
 "border:none;\n"
 "text-align:left;"));
 
-        horizontalLayout_4->addWidget(pushButton_4);
+        horizontalLayout_4->addWidget(mobileButton);
 
         layoutWidget_9 = new QWidget(groupBox_2);
         layoutWidget_9->setObjectName(QStringLiteral("layoutWidget_9"));
@@ -364,20 +374,20 @@ public:
 
         verticalLayout_2->addWidget(label_2);
 
-        pushButton_2 = new QPushButton(layoutWidget_9);
-        pushButton_2->setObjectName(QStringLiteral("pushButton_2"));
-        pushButton_2->setMinimumSize(QSize(90, 20));
-        pushButton_2->setMaximumSize(QSize(90, 20));
+        nameSurnameButton = new QPushButton(layoutWidget_9);
+        nameSurnameButton->setObjectName(QStringLiteral("nameSurnameButton"));
+        nameSurnameButton->setMinimumSize(QSize(90, 20));
+        nameSurnameButton->setMaximumSize(QSize(90, 20));
         QFont font2;
         font2.setUnderline(false);
-        pushButton_2->setFont(font2);
-        pushButton_2->setAutoFillBackground(false);
-        pushButton_2->setStyleSheet(QLatin1String("color:blue;\n"
+        nameSurnameButton->setFont(font2);
+        nameSurnameButton->setAutoFillBackground(false);
+        nameSurnameButton->setStyleSheet(QLatin1String("color:blue;\n"
 "border:none;\n"
 "text-align:left;"));
-        pushButton_2->setIconSize(QSize(90, 20));
+        nameSurnameButton->setIconSize(QSize(90, 20));
 
-        verticalLayout_2->addWidget(pushButton_2);
+        verticalLayout_2->addWidget(nameSurnameButton);
 
         label_11 = new QLabel(groupBox_2);
         label_11->setObjectName(QStringLiteral("label_11"));
@@ -418,42 +428,42 @@ public:
         clearHistoryButton->setStyleSheet(QLatin1String("color: grey;\n"
 "border:none;"));
         clearHistoryButton->setIconSize(QSize(90, 20));
-        layoutWidget1 = new QWidget(groupBox_2);
-        layoutWidget1->setObjectName(QStringLiteral("layoutWidget1"));
-        layoutWidget1->setGeometry(QRect(640, 271, 115, 22));
-        horizontalLayout_8 = new QHBoxLayout(layoutWidget1);
+        layoutWidget = new QWidget(groupBox_2);
+        layoutWidget->setObjectName(QStringLiteral("layoutWidget"));
+        layoutWidget->setGeometry(QRect(640, 271, 115, 22));
+        horizontalLayout_8 = new QHBoxLayout(layoutWidget);
         horizontalLayout_8->setSpacing(3);
         horizontalLayout_8->setObjectName(QStringLiteral("horizontalLayout_8"));
         horizontalLayout_8->setContentsMargins(0, 0, 0, 0);
-        label_16 = new QLabel(layoutWidget1);
+        label_16 = new QLabel(layoutWidget);
         label_16->setObjectName(QStringLiteral("label_16"));
         label_16->setMinimumSize(QSize(20, 20));
         label_16->setMaximumSize(QSize(20, 20));
 
         horizontalLayout_8->addWidget(label_16);
 
-        label_17 = new QLabel(layoutWidget1);
+        label_17 = new QLabel(layoutWidget);
         label_17->setObjectName(QStringLiteral("label_17"));
         label_17->setMinimumSize(QSize(90, 20));
         label_17->setMaximumSize(QSize(90, 20));
 
         horizontalLayout_8->addWidget(label_17);
 
-        pushButton_12 = new QPushButton(centralwidget);
-        pushButton_12->setObjectName(QStringLiteral("pushButton_12"));
-        pushButton_12->setGeometry(QRect(19, 1, 55, 20));
-        pushButton_12->setMinimumSize(QSize(55, 20));
-        pushButton_12->setMaximumSize(QSize(55, 20));
-        pushButton_12->setFont(font);
-        pushButton_12->setStyleSheet(QLatin1String("border: none;\n"
+        settingsButton = new QPushButton(centralwidget);
+        settingsButton->setObjectName(QStringLiteral("settingsButton"));
+        settingsButton->setGeometry(QRect(19, 1, 55, 20));
+        settingsButton->setMinimumSize(QSize(55, 20));
+        settingsButton->setMaximumSize(QSize(55, 20));
+        settingsButton->setFont(font);
+        settingsButton->setStyleSheet(QLatin1String("border: none;\n"
 "color: grey;"));
-        pushButton_13 = new QPushButton(centralwidget);
-        pushButton_13->setObjectName(QStringLiteral("pushButton_13"));
-        pushButton_13->setGeometry(QRect(70, 1, 55, 20));
-        pushButton_13->setMinimumSize(QSize(55, 20));
-        pushButton_13->setMaximumSize(QSize(55, 20));
-        pushButton_13->setFont(font);
-        pushButton_13->setStyleSheet(QLatin1String("border: none;\n"
+        aboutButton = new QPushButton(centralwidget);
+        aboutButton->setObjectName(QStringLiteral("aboutButton"));
+        aboutButton->setGeometry(QRect(70, 1, 55, 20));
+        aboutButton->setMinimumSize(QSize(55, 20));
+        aboutButton->setMaximumSize(QSize(55, 20));
+        aboutButton->setFont(font);
+        aboutButton->setStyleSheet(QLatin1String("border: none;\n"
 "color: grey;"));
         MyClient->setCentralWidget(centralwidget);
 
@@ -466,12 +476,12 @@ public:
     {
         MyClient->setWindowTitle(QApplication::translate("MyClient", "Stream", nullptr));
         actionfghngf->setText(QApplication::translate("MyClient", "fghngf", nullptr));
-        pushButton_11->setText(QApplication::translate("MyClient", "Log out", nullptr));
+        logOutButton->setText(QApplication::translate("MyClient", "Log out", nullptr));
         groupBox_2->setTitle(QString());
         groupBox_3->setTitle(QString());
         label_10->setText(QApplication::translate("MyClient", "Chat name", nullptr));
-        pushButton_10->setText(QApplication::translate("MyClient", "10 members", nullptr));
-        pushButton_8->setText(QApplication::translate("MyClient", "Search", nullptr));
+        membersNumberButton->setText(QApplication::translate("MyClient", "10 members", nullptr));
+        searchMessagesButton->setText(QApplication::translate("MyClient", "Search", nullptr));
         label_9->setText(QString());
         groupBox_4->setTitle(QString());
         groupBox_5->setTitle(QString());
@@ -480,27 +490,27 @@ public:
         label_15->setText(QApplication::translate("MyClient", "Chat info", nullptr));
         label->setText(QApplication::translate("MyClient", "<html><head/><body><p><img src=\":/img/human1.jpg\" width=\"130\" height=\"130\"/>TextLabel</p></body></html>", nullptr));
         label_3->setText(QApplication::translate("MyClient", "online", nullptr));
-        pushButton->setText(QApplication::translate("MyClient", "Set profile photo", nullptr));
+        setProfilePhotoButton->setText(QApplication::translate("MyClient", "Set profile photo", nullptr));
         label_8->setText(QApplication::translate("MyClient", "Night mode", nullptr));
         nightModeButton->setText(QApplication::translate("MyClient", "On", nullptr));
         label_4->setText(QApplication::translate("MyClient", "Username:", nullptr));
-        pushButton_3->setText(QApplication::translate("MyClient", "username", nullptr));
+        usernameButton->setText(QApplication::translate("MyClient", "username", nullptr));
         label_6->setText(QApplication::translate("MyClient", "Email:", nullptr));
-        pushButton_5->setText(QApplication::translate("MyClient", "email", nullptr));
+        emailButton->setText(QApplication::translate("MyClient", "email", nullptr));
         label_7->setText(QApplication::translate("MyClient", "Bio:", nullptr));
-        pushButton_6->setText(QApplication::translate("MyClient", "bio", nullptr));
+        bioButton->setText(QApplication::translate("MyClient", "bio", nullptr));
         label_5->setText(QApplication::translate("MyClient", "Mobile:", nullptr));
-        pushButton_4->setText(QApplication::translate("MyClient", "mobile", nullptr));
+        mobileButton->setText(QApplication::translate("MyClient", "mobile", nullptr));
         label_2->setText(QApplication::translate("MyClient", "<html><head/><body><p><span style=\" font-size:10pt; font-weight:600;\">Info</span></p></body></html>", nullptr));
-        pushButton_2->setText(QApplication::translate("MyClient", "Name Surname", nullptr));
+        nameSurnameButton->setText(QApplication::translate("MyClient", "Name Surname", nullptr));
         label_11->setText(QString());
         label_12->setText(QApplication::translate("MyClient", "Mute", nullptr));
         notificationsButton->setText(QApplication::translate("MyClient", "On", nullptr));
         clearHistoryButton->setText(QApplication::translate("MyClient", "Clear chat history", nullptr));
         label_16->setText(QApplication::translate("MyClient", "IP:", nullptr));
         label_17->setText(QApplication::translate("MyClient", "192.168.x.xxx", nullptr));
-        pushButton_12->setText(QApplication::translate("MyClient", "Settings", nullptr));
-        pushButton_13->setText(QApplication::translate("MyClient", "About", nullptr));
+        settingsButton->setText(QApplication::translate("MyClient", "Settings", nullptr));
+        aboutButton->setText(QApplication::translate("MyClient", "About", nullptr));
     } // retranslateUi
 
 };

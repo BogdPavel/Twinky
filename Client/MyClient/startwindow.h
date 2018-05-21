@@ -30,6 +30,7 @@ private:
     Ui::StartWindow *ui;
     QTcpSocket * socket;
     quint16 nextBlockSize;
+    QString message;
 };
 
 #endif // STARTWINDOW_H

@@ -2,6 +2,7 @@
 #define MYCLIENT_H
 
 #include <QMainWindow>
+#include <QHostAddress>
 #include <QTcpSocket>
 
 const QString CheckUsernameAndPassword("11");
@@ -11,8 +12,7 @@ namespace Ui {
 class MyClient;
 }
 
-class MyClient : public QMainWindow
-{
+class MyClient : public QMainWindow {
     Q_OBJECT
 
 public:
@@ -22,21 +22,26 @@ public:
 private:
     Ui::MyClient *ui;
     QTcpSocket * socket;
+    quint16 nextBlockSize;
 
 private slots:
-    /*void onAboutButtonClicked();
+    void onAboutButtonClicked();
     void onSettingsButtonClicked();
     void onLogOutButtonClicked();
     void onNumberOfUsersButtonClicked();
-    void onSearchButtonClicked();
+    void onSearchMessagesButtonClicked();
     void onSetPhotoButtonClicked();
-    void onEditInfoBttonClicked();
     void onNightModeButtonClicked();
     void onNotificationsButtonClicked();
     void onClearHistoryButtonClicked();
+    void onNameSurnameButtonClicked();
+    void onUsernameButtonClicked();
+    void onEmailButtonClicked();
+    void onMobileButtonClicked();
+    void onBioButtonClicked();
 
     void slotReadyRead();
-    void clotConnected();*/
+    void clotConnected();
 };
 
 #endif // MYCLIENT_H

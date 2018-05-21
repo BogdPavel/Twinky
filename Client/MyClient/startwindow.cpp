@@ -27,23 +27,29 @@ void StartWindow::slotConnected() {
 }
 
 void StartWindow::slotReadyRead() {
-    QDataStream in(socket);
+    qDebug() << "Read!";
+    QDataStream serverReadStream(socket);
+    serverReadStream.setVersion(QDataStream::Qt_5_5);
     while(true) {
-        if(!nextBlockSize) {
-            if(socket->bytesAvailable() < sizeof(quint16))
+        if (!nextBlockSize) {
+            if (socket->bytesAvailable() < sizeof(quint16))
                 break;
-            in >> nextBlockSize;
+            serverReadStream >> nextBlockSize;
         }
-        if(socket->bytesAvailable() < nextBlockSize)
+        if (socket->bytesAvailable() < nextBlockSize) {
             break;
+        }
+        serverReadStream >> message;
+        qDebug() << message;
+        nextBlockSize = 0;
     }
-    QString str;
-    in >> str;
-    if(str != "Ok")
-        ui->answerLabel->setText(str);
+    if(message.compare(CheckUsernameAndPassword + " " + "Ok")) {
+//        MyClient window;
+//        window.show();
+        ui->answerLabel->setText(message);
+    }
     else {
-        SignUpWindow * window = new SignUpWindow();
-        window->show();
+        ui->answerLabel->setText(message);
     }
 }
 
@@ -63,5 +69,5 @@ void StartWindow::slotSendToServer() {
 
 void StartWindow::onSignUpButtonClicked() {
     SignUpWindow window;
-    window.show();
+    window.exec();
 }

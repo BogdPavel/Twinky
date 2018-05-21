@@ -17,7 +17,7 @@ CXXFLAGS      = -fno-keep-inline-dllexport -O2 -std=gnu++11 -Wall -W -Wextra -fe
 INCPATH       = -I..\MyServer -I. -ID:\Qt\5.10.1\mingw53_32\include -ID:\Qt\5.10.1\mingw53_32\include\QtWidgets -ID:\Qt\5.10.1\mingw53_32\include\QtGui -ID:\Qt\5.10.1\mingw53_32\include\QtANGLE -ID:\Qt\5.10.1\mingw53_32\include\QtNetwork -ID:\Qt\5.10.1\mingw53_32\include\QtSql -ID:\Qt\5.10.1\mingw53_32\include\QtCore -Irelease -ID:\Qt\5.10.1\mingw53_32\mkspecs\win32-g++ 
 LINKER      =        g++
 LFLAGS        =        -Wl,-s -Wl,-subsystem,windows -mthreads
-LIBS        =        -lmingw32 -LD:\Qt\5.10.1\mingw53_32\lib D:\Qt\5.10.1\mingw53_32\lib\libqtmain.a -LC:\utils\my_sql\my_sql\lib -LC:\utils\postgresql\pgsql\lib -lshell32 "C:\Program Files\MySQL\MySQL Server 5.5\bin" D:\Qt\5.10.1\mingw53_32\lib\libQt5Widgets.a D:\Qt\5.10.1\mingw53_32\lib\libQt5Gui.a D:\Qt\5.10.1\mingw53_32\lib\libQt5Network.a D:\Qt\5.10.1\mingw53_32\lib\libQt5Sql.a D:\Qt\5.10.1\mingw53_32\lib\libQt5Core.a 
+LIBS        =        -lmingw32 -LD:\Qt\5.10.1\mingw53_32\lib D:\Qt\5.10.1\mingw53_32\lib\libqtmain.a -LC:\utils\my_sql\my_sql\lib -LC:\utils\postgresql\pgsql\lib -lshell32 D:\Qt\5.10.1\mingw53_32\lib\libQt5Widgets.a D:\Qt\5.10.1\mingw53_32\lib\libQt5Gui.a D:\Qt\5.10.1\mingw53_32\lib\libQt5Network.a D:\Qt\5.10.1\mingw53_32\lib\libQt5Sql.a D:\Qt\5.10.1\mingw53_32\lib\libQt5Core.a 
 QMAKE         = D:\Qt\5.10.1\mingw53_32\bin\qmake.exe
 IDC           = idc
 IDL           = midl
