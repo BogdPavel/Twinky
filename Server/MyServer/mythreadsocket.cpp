@@ -78,10 +78,7 @@ void MyThreadSocket::checkUserInDB() {
         bufferUsername.append(message.at(i));
         i++;
     }
-    while(message.length() != i) {
-       bufferPassword.append(message.at(i));
-       i++;
-    }
+    bufferPassword.append(message.mid(i, message.length() - i - 1));
     qDebug() << bufferUsername;
     qDebug() << bufferPassword;
     message.clear();
@@ -98,7 +95,43 @@ void MyThreadSocket::checkUserInDB() {
 }
 
 void MyThreadSocket::signUpNewUser() {
-
+    QString bufferUsername;
+    int i = 3;
+    while(true) {
+        if(message.at(i) == ' ') {
+            i++;
+            break;
+        }
+        bufferUsername.append(message.at(i));
+        i++;
+    }
+    QSqlQuery query = QSqlQuery(usersDB);
+    if(!query.exec("select Username from user where Username = " + bufferUsername)) {
+        int j = message.length();
+        while(message.at(--j) != ' ');
+        QString bufferEmail(message.mid(j + 1, message.length() - j + 1));
+        int z = --j;
+        while(message.at(--j) != ' ');
+        QString bufferPassword(message.mid(j + 1, z - j));
+        QString bufferNameSurname(message.mid(i, j - i));
+        qDebug() << bufferUsername;
+        qDebug() << bufferPassword;
+        qDebug() << bufferNameSurname;
+        qDebug() << bufferEmail;
+        query.exec("insert into user (Username, NameSurname, Password) values (" +
+                   bufferUsername + "," + bufferNameSurname + "," + bufferPassword + ")");
+        qDebug() << query.lastError().text();
+        query.exec("insert into userInfo (Username, Email) values (" +
+                   bufferUsername + "," + bufferEmail + ")");
+        qDebug() << query.lastError().text();
+        message.clear();
+        message.append("Ok");
+    }
+    else {
+        message.clear();
+        message.append("Username already occupied");
+    }
+    sendToClient(SignUpNewUser);
 }
 
 void MyThreadSocket::sendToClient(QString code) {
