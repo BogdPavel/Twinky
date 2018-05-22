@@ -31,7 +31,7 @@ class Ui_SignUpWindow
 {
 public:
     QGroupBox *groupBox;
-    QWidget *widget;
+    QWidget *layoutWidget;
     QVBoxLayout *verticalLayout_3;
     QVBoxLayout *verticalLayout;
     QLabel *label_2;
@@ -61,7 +61,7 @@ public:
     QLabel *label_9;
     QLineEdit *keyLine;
     QHBoxLayout *horizontalLayout_8;
-    QSpacerItem *horizontalSpacer;
+    QLabel *errorSignUpLabel;
     QPushButton *signUpButton;
 
     void setupUi(QDialog *SignUpWindow)
@@ -76,16 +76,16 @@ public:
         groupBox->setGeometry(QRect(10, 10, 192, 285));
         groupBox->setMinimumSize(QSize(192, 285));
         groupBox->setMaximumSize(QSize(192, 285));
-        widget = new QWidget(groupBox);
-        widget->setObjectName(QStringLiteral("widget"));
-        widget->setGeometry(QRect(11, 0, 174, 281));
-        verticalLayout_3 = new QVBoxLayout(widget);
+        layoutWidget = new QWidget(groupBox);
+        layoutWidget->setObjectName(QStringLiteral("layoutWidget"));
+        layoutWidget->setGeometry(QRect(10, 0, 174, 281));
+        verticalLayout_3 = new QVBoxLayout(layoutWidget);
         verticalLayout_3->setObjectName(QStringLiteral("verticalLayout_3"));
         verticalLayout_3->setContentsMargins(0, 0, 0, 0);
         verticalLayout = new QVBoxLayout();
         verticalLayout->setSpacing(0);
         verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
-        label_2 = new QLabel(widget);
+        label_2 = new QLabel(layoutWidget);
         label_2->setObjectName(QStringLiteral("label_2"));
         label_2->setMinimumSize(QSize(170, 30));
         label_2->setMaximumSize(QSize(170, 30));
@@ -93,7 +93,7 @@ public:
 
         verticalLayout->addWidget(label_2);
 
-        label = new QLabel(widget);
+        label = new QLabel(layoutWidget);
         label->setObjectName(QStringLiteral("label"));
         label->setMinimumSize(QSize(170, 30));
         label->setMaximumSize(QSize(170, 30));
@@ -111,7 +111,7 @@ public:
         verticalLayout_2 = new QVBoxLayout();
         verticalLayout_2->setSpacing(0);
         verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
-        label_3 = new QLabel(widget);
+        label_3 = new QLabel(layoutWidget);
         label_3->setObjectName(QStringLiteral("label_3"));
         label_3->setMinimumSize(QSize(50, 10));
         label_3->setMaximumSize(QSize(50, 10));
@@ -119,7 +119,7 @@ public:
 
         verticalLayout_2->addWidget(label_3);
 
-        label_6 = new QLabel(widget);
+        label_6 = new QLabel(layoutWidget);
         label_6->setObjectName(QStringLiteral("label_6"));
         label_6->setMinimumSize(QSize(50, 10));
         label_6->setMaximumSize(QSize(50, 10));
@@ -130,7 +130,7 @@ public:
 
         horizontalLayout_7->addLayout(verticalLayout_2);
 
-        nameSurnameLine = new QLineEdit(widget);
+        nameSurnameLine = new QLineEdit(layoutWidget);
         nameSurnameLine->setObjectName(QStringLiteral("nameSurnameLine"));
         nameSurnameLine->setMinimumSize(QSize(110, 20));
         nameSurnameLine->setMaximumSize(QSize(110, 20));
@@ -143,7 +143,7 @@ public:
 
         horizontalLayout_6 = new QHBoxLayout();
         horizontalLayout_6->setObjectName(QStringLiteral("horizontalLayout_6"));
-        label_4 = new QLabel(widget);
+        label_4 = new QLabel(layoutWidget);
         label_4->setObjectName(QStringLiteral("label_4"));
         label_4->setMinimumSize(QSize(50, 20));
         label_4->setMaximumSize(QSize(50, 20));
@@ -151,7 +151,7 @@ public:
 
         horizontalLayout_6->addWidget(label_4);
 
-        usernameLine = new QLineEdit(widget);
+        usernameLine = new QLineEdit(layoutWidget);
         usernameLine->setObjectName(QStringLiteral("usernameLine"));
         usernameLine->setMinimumSize(QSize(110, 20));
         usernameLine->setMaximumSize(QSize(110, 20));
@@ -163,7 +163,7 @@ public:
 
         horizontalLayout_5 = new QHBoxLayout();
         horizontalLayout_5->setObjectName(QStringLiteral("horizontalLayout_5"));
-        label_5 = new QLabel(widget);
+        label_5 = new QLabel(layoutWidget);
         label_5->setObjectName(QStringLiteral("label_5"));
         label_5->setMinimumSize(QSize(50, 20));
         label_5->setMaximumSize(QSize(50, 20));
@@ -171,7 +171,7 @@ public:
 
         horizontalLayout_5->addWidget(label_5);
 
-        passwordLine = new QLineEdit(widget);
+        passwordLine = new QLineEdit(layoutWidget);
         passwordLine->setObjectName(QStringLiteral("passwordLine"));
         passwordLine->setMinimumSize(QSize(110, 20));
         passwordLine->setMaximumSize(QSize(110, 20));
@@ -189,7 +189,7 @@ public:
 
         horizontalLayout_4->addItem(horizontalSpacer_3);
 
-        checkBox = new QCheckBox(widget);
+        checkBox = new QCheckBox(layoutWidget);
         checkBox->setObjectName(QStringLiteral("checkBox"));
         checkBox->setAutoExclusive(false);
 
@@ -200,7 +200,7 @@ public:
 
         horizontalLayout_2 = new QHBoxLayout();
         horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
-        label_10 = new QLabel(widget);
+        label_10 = new QLabel(layoutWidget);
         label_10->setObjectName(QStringLiteral("label_10"));
         label_10->setMinimumSize(QSize(50, 20));
         label_10->setMaximumSize(QSize(50, 20));
@@ -208,7 +208,7 @@ public:
 
         horizontalLayout_2->addWidget(label_10);
 
-        emailLine = new QLineEdit(widget);
+        emailLine = new QLineEdit(layoutWidget);
         emailLine->setObjectName(QStringLiteral("emailLine"));
         emailLine->setMinimumSize(QSize(110, 20));
         emailLine->setMaximumSize(QSize(110, 20));
@@ -221,14 +221,14 @@ public:
         horizontalLayout_3 = new QHBoxLayout();
         horizontalLayout_3->setSpacing(0);
         horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
-        errorLabel = new QLabel(widget);
+        errorLabel = new QLabel(layoutWidget);
         errorLabel->setObjectName(QStringLiteral("errorLabel"));
         errorLabel->setMinimumSize(QSize(60, 23));
         errorLabel->setMaximumSize(QSize(60, 23));
 
         horizontalLayout_3->addWidget(errorLabel);
 
-        label_8 = new QLabel(widget);
+        label_8 = new QLabel(layoutWidget);
         label_8->setObjectName(QStringLiteral("label_8"));
         label_8->setMinimumSize(QSize(75, 23));
         label_8->setMaximumSize(QSize(75, 23));
@@ -237,7 +237,7 @@ public:
 
         horizontalLayout_3->addWidget(label_8);
 
-        getKeyButton = new QPushButton(widget);
+        getKeyButton = new QPushButton(layoutWidget);
         getKeyButton->setObjectName(QStringLiteral("getKeyButton"));
         getKeyButton->setMinimumSize(QSize(35, 23));
         getKeyButton->setMaximumSize(QSize(35, 23));
@@ -256,7 +256,7 @@ public:
 
         horizontalLayout = new QHBoxLayout();
         horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
-        label_9 = new QLabel(widget);
+        label_9 = new QLabel(layoutWidget);
         label_9->setObjectName(QStringLiteral("label_9"));
         label_9->setMinimumSize(QSize(50, 20));
         label_9->setMaximumSize(QSize(50, 20));
@@ -264,7 +264,7 @@ public:
 
         horizontalLayout->addWidget(label_9);
 
-        keyLine = new QLineEdit(widget);
+        keyLine = new QLineEdit(layoutWidget);
         keyLine->setObjectName(QStringLiteral("keyLine"));
         keyLine->setMinimumSize(QSize(110, 20));
         keyLine->setMaximumSize(QSize(110, 20));
@@ -278,11 +278,15 @@ public:
         horizontalLayout_8->setSpacing(0);
         horizontalLayout_8->setObjectName(QStringLiteral("horizontalLayout_8"));
         horizontalLayout_8->setContentsMargins(-1, -1, 4, -1);
-        horizontalSpacer = new QSpacerItem(115, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        errorSignUpLabel = new QLabel(layoutWidget);
+        errorSignUpLabel->setObjectName(QStringLiteral("errorSignUpLabel"));
+        errorSignUpLabel->setMinimumSize(QSize(117, 0));
+        errorSignUpLabel->setMaximumSize(QSize(117, 16777215));
+        errorSignUpLabel->setSizeIncrement(QSize(0, 0));
 
-        horizontalLayout_8->addItem(horizontalSpacer);
+        horizontalLayout_8->addWidget(errorSignUpLabel);
 
-        signUpButton = new QPushButton(widget);
+        signUpButton = new QPushButton(layoutWidget);
         signUpButton->setObjectName(QStringLiteral("signUpButton"));
         signUpButton->setMinimumSize(QSize(50, 23));
         signUpButton->setMaximumSize(QSize(50, 23));
@@ -321,6 +325,7 @@ public:
         label_8->setText(QApplication::translate("SignUpWindow", "Activation key", nullptr));
         getKeyButton->setText(QApplication::translate("SignUpWindow", "Get", nullptr));
         label_9->setText(QApplication::translate("SignUpWindow", "Your key", nullptr));
+        errorSignUpLabel->setText(QString());
         signUpButton->setText(QApplication::translate("SignUpWindow", "Sign up", nullptr));
     } // retranslateUi
 

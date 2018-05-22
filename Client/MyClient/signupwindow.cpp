@@ -39,15 +39,33 @@ void SignUpWindow::slotSendToServer() {
 }
 
 void SignUpWindow::slotReadyRead() {
-
+    qDebug() << "Read!";
+    QDataStream serverReadStream(socket);
+    serverReadStream.setVersion(QDataStream::Qt_5_5);
+    while(true) {
+        if (!nextBlockSize) {
+            if (socket->bytesAvailable() < sizeof(quint16))
+                break;
+            serverReadStream >> nextBlockSize;
+        }
+        if (socket->bytesAvailable() < nextBlockSize) {
+            break;
+        }
+        serverReadStream >> message;
+        qDebug() << message;
+        nextBlockSize = 0;
+    }
+    if(message.compare(SignUpNewUser + " " + "Ok")) {
+        ui->errorSignUpLabel->setText(message);
+    }
+    else ui->errorSignUpLabel->setText(message);
 }
 
-void SignUpWindow::onGetKeyButtonClicked()
-{
+void SignUpWindow::onGetKeyButtonClicked() {
     if(!ui->nameSurnameLine->text().isEmpty() && !ui->usernameLine->text().isEmpty()  &&
         !ui->passwordLine->text().isEmpty() ) {
         QByteArray code = QMessageAuthenticationCode::hash(ui->usernameLine->text().toLocal8Bit(),
-                                         ui->passwordLine->text().toLocal8Bit(),
+                                         QString::number(qrand() % 100 + 999).toLocal8Bit(),
                                          QCryptographicHash::Sha1).toHex();
         secretCode.append(code);
         qDebug() << secretCode;
@@ -59,8 +77,8 @@ void SignUpWindow::onGetKeyButtonClicked()
 
 void SignUpWindow::slotMailSent(QString status) {
     if(status == "Message sent")
-        ui->errorLabel->setText("Sent!");
-    else ui->errorLabel->setText("Error!");
+        ui->errorLabel->setText("Sent");
+    else ui->errorLabel->setText("Error");
 }
 
 
