@@ -83,7 +83,7 @@ void MyThreadSocket::checkUserInDB() {
     qDebug() << bufferPassword;
     message.clear();
     QSqlQuery query = QSqlQuery(usersDB);
-    if(query.exec("select Username, Password from user where Username = " + bufferUsername)) {
+    if(query.exec("select Username, Password from user where Username = \'" + bufferUsername + "\'")) {
         if(query.value("Password").toString() == bufferPassword)
             message.append("Ok");
         else message.append("Incorrect password");
@@ -106,7 +106,7 @@ void MyThreadSocket::signUpNewUser() {
         i++;
     }
     QSqlQuery query = QSqlQuery(usersDB);
-    if(!query.exec("select Username from user where Username = " + bufferUsername)) {
+    if(!query.exec("select Username from user where Username = \'" + bufferUsername + "\'")) {
         int j = message.length();
         while(message.at(--j) != ' ');
         QString bufferEmail(message.mid(j + 1, message.length() - j + 1));
@@ -118,11 +118,11 @@ void MyThreadSocket::signUpNewUser() {
         qDebug() << bufferPassword;
         qDebug() << bufferNameSurname;
         qDebug() << bufferEmail;
-        query.exec("insert into user (Username, NameSurname, Password) values (" +
-                   bufferUsername + "," + bufferNameSurname + "," + bufferPassword + ")");
+        query.exec("insert into user (Username, NameSurname, Password) values (\'" +
+                   bufferUsername + "\',\'" + bufferNameSurname + "\',\'" + bufferPassword + "\')");
         qDebug() << query.lastError().text();
-        query.exec("insert into userInfo (Username, Email) values (" +
-                   bufferUsername + "," + bufferEmail + ")");
+        query.exec("insert into userInfo (Username, Email) values (\'" +
+                   bufferUsername + "\',\'" + bufferEmail + "\')");
         qDebug() << query.lastError().text();
         message.clear();
         message.append("Ok");

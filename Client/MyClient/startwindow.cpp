@@ -6,24 +6,43 @@ StartWindow::StartWindow(QWidget *parent) :
     ui->setupUi(this);
     socket = new QTcpSocket(this);
     socket->connectToHost(QHostAddress::LocalHost, 2323);
-    connect(socket, SIGNAL(connected()),
-            this, SLOT(slotConnected()));
-    connect(socket, SIGNAL(readyRead()),
-            this, SLOT(slotReadyRead()));
-    //connect(socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(slotError(QAbstractSocket::SocketError)));
-    connect(ui->logInButton, SIGNAL(clicked(bool)),
-            this, SLOT(slotSendToServer()));
-    connect(ui->signUpButton, SIGNAL(clicked(bool)),
-            this, SLOT(onSignUpButtonClicked()));
+    reconnect();
 
 }
 
 StartWindow::~StartWindow() {
     delete ui;
+    delete socket;
 }
 
 void StartWindow::slotConnected() {
     ui->answerLabel->setText("Connection established");
+}
+
+void StartWindow::slotDisconnected() {
+    socket->close();
+}
+
+void StartWindow::reconnect() {
+    socket->disconnectFromHost();
+    if(socket->waitForDisconnected(2000)) {
+        socket = new QTcpSocket(this);
+        socket->connectToHost(QHostAddress::LocalHost, 2323);
+        connect(socket, SIGNAL(connected()),
+                this, SLOT(slotConnected()));
+        connect(socket, SIGNAL(readyRead()),
+                this, SLOT(slotReadyRead()));
+        connect(socket, SIGNAL(disconnected()),
+                this, SLOT(slotDisconnected()));
+        connect(ui->logInButton, SIGNAL(clicked(bool)),
+                this, SLOT(slotSendToServer()));
+        connect(ui->signUpButton, SIGNAL(clicked(bool)),
+                this, SLOT(onSignUpButtonClicked()));
+    }
+    else {
+        ui->answerLabel->setText("Connect Error. Reload");
+    }
+
 }
 
 void StartWindow::slotReadyRead() {

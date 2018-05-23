@@ -66,7 +66,7 @@ void SignUpWindow::onGetKeyButtonClicked() {
         !ui->passwordLine->text().isEmpty() ) {
         QByteArray code = QMessageAuthenticationCode::hash(ui->usernameLine->text().toLocal8Bit(),
                                          QString::number(qrand() % 100 + 999).toLocal8Bit(),
-                                         QCryptographicHash::Sha1).toHex();
+                                         QCryptographicHash::Md5).toHex();
         secretCode.append(code);
         qDebug() << secretCode;
         Smtp * smtp = new Smtp("pavel.bogdevich1998@gmail.com", "pavelprostopavel", "smtp.gmail.com");

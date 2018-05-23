@@ -19,18 +19,20 @@ public:
     explicit StartWindow(QWidget *parent = 0);
     ~StartWindow();
 
-private slots:
-    void onSignUpButtonClicked();
-    //void slotError(QAbstractSocket::SocketError);
-    void slotSendToServer();
-    void slotConnected();
-    void slotReadyRead();
-
 private:
     Ui::StartWindow *ui;
     QTcpSocket * socket;
     quint16 nextBlockSize;
     QString message;
+
+private slots:
+    void onSignUpButtonClicked();
+    void slotSendToServer();
+    void slotConnected();
+    void slotReadyRead();
+    void slotDisconnected();
+    void reconnect();
+
 };
 
 #endif // STARTWINDOW_H
