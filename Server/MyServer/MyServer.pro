@@ -19,8 +19,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     main.cpp \
     myserver.cpp \
-    mythreadsocket.cpp
 
 HEADERS += \
     myserver.h \
-    mythreadsocket.h

@@ -2,10 +2,10 @@
 #include "ui_startwindow.h"
 
 StartWindow::StartWindow(QWidget *parent) :
-    QDialog(parent), ui(new Ui::StartWindow) {
+    QDialog(parent), ui(new Ui::StartWindow), nextBlockSize(0) {
     ui->setupUi(this);
     socket = new QTcpSocket(this);
-    socket->connectToHost(QHostAddress::LocalHost, 2323);
+    socket->connectToHost(QHostAddress::LocalHost, 80);
     connect(socket, SIGNAL(connected()),
             this, SLOT(slotConnected()));
     connect(socket, SIGNAL(readyRead()),
@@ -29,13 +29,14 @@ void StartWindow::slotConnected() {
 }
 
 void StartWindow::slotDisconnected() {
-    qDebug() << "Disconnected";
+    ui->answerLabel->setText("Disconnected");
 }
 
 void StartWindow::slotReadyRead() {
     qDebug() << "Read!";
     QDataStream serverReadStream(socket);
-    serverReadStream.setVersion(QDataStream::Qt_5_5);
+    serverReadStream.setVersion(QDataStream::Qt_4_5);
+    qDebug() << "Before cycle" << nextBlockSize;
     while(true) {
         if (!nextBlockSize) {
             if (socket->bytesAvailable() < sizeof(quint16))
@@ -64,7 +65,7 @@ void StartWindow::slotSendToServer() {
         QString str(CheckUsernameAndPassword + " " + ui->usernameLine->text() + " " + ui->passwordLine->text());
         QByteArray arrBlock;
         QDataStream out(&arrBlock, QIODevice::WriteOnly);
-        out.setVersion(QDataStream::Qt_5_5);
+        out.setVersion(QDataStream::Qt_4_5);
         out << quint16(0) << str;
         out.device()->seek(0);
         out << quint16(arrBlock.size() - sizeof(quint16));
