@@ -40,7 +40,6 @@ private:
 private slots:
     void slotReadyRead();
     void slotDisconnected();
-    void getMessage();
     void checkUserInDB();
     void signUpNewUser();
     void sendToClient(QString);

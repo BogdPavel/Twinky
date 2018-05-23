@@ -34,6 +34,7 @@ private slots:
     //void slotError(QAbstractSocket::SocketError);
     void onGetKeyButtonClicked();
     void slotMailSent(QString );
+    void slotDisconnected();
 };
 
 #endif // SIGNUPWINDOW_H

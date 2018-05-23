@@ -31,7 +31,6 @@ private slots:
     void slotConnected();
     void slotReadyRead();
     void slotDisconnected();
-    void reconnect();
 
 };
 

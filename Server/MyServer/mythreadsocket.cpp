@@ -21,6 +21,7 @@ void MyThreadSocket::run() {
     socket = new QTcpSocket();
     socket->setSocketDescriptor(myDescriptor);
     qDebug() << "Socket descriptor - " << myDescriptor;
+    qDebug() << socket->currentReadChannel();
     connect(socket, SIGNAL(readyRead()),
             this, SLOT(slotReadyRead()), Qt::DirectConnection);
     connect(socket, SIGNAL(disconnected()),
@@ -29,31 +30,12 @@ void MyThreadSocket::run() {
 }
 
 void MyThreadSocket::slotReadyRead() {
-    getMessage();
-    QString buffer(message.at(0));
-    buffer += message.at(1);
-    messageCode = buffer.toInt();
-    qDebug() << messageCode;
-    switch(messageCode) {
-    case 0: qDebug() << "Convert Error"; break;
-    case SignIn: checkUserInDB(); break;
-    case SignUp: signUpNewUser(); break;
-    }
-    socket->disconnectFromHost();
-}
-
-void MyThreadSocket::slotDisconnected()
-{
-    socket->close();
-    quit();
-}
-
-void MyThreadSocket::getMessage() {
+    qDebug() << "ReadyRead";
     QDataStream clientReadStream(socket);
     clientReadStream.setVersion(QDataStream::Qt_5_5);
     while(true) {
         if (!nextBlockSize) {
-            if (socket->bytesAvailable() < sizeof(quint16))
+            if(socket->bytesAvailable() < sizeof(quint16))
                 break;
             clientReadStream >> nextBlockSize;
         }
@@ -64,7 +46,23 @@ void MyThreadSocket::getMessage() {
         qDebug() << message;
         nextBlockSize = 0;
     }
+    QString buffer(message.at(0));
+    buffer += message.at(1);
+    messageCode = buffer.toInt();
+    qDebug() << messageCode;
+    switch(messageCode) {
+    case 0: qDebug() << "Convert Error"; break;
+    case SignIn: checkUserInDB(); break;
+    case SignUp: signUpNewUser(); break;
+    }
 }
+
+void MyThreadSocket::slotDisconnected() {
+    qDebug() << "Disconnected";
+    socket->close();
+    quit();
+}
+
 
 void MyThreadSocket::checkUserInDB() {
     QString bufferUsername;
@@ -78,12 +76,13 @@ void MyThreadSocket::checkUserInDB() {
         bufferUsername.append(message.at(i));
         i++;
     }
-    bufferPassword.append(message.mid(i, message.length() - i - 1));
+    bufferPassword.append(message.mid(i, message.length() - i));
     qDebug() << bufferUsername;
     qDebug() << bufferPassword;
     message.clear();
     QSqlQuery query = QSqlQuery(usersDB);
     if(query.exec("select Username, Password from user where Username = \'" + bufferUsername + "\'")) {
+        qDebug() << query.value("Password").toString();
         if(query.value("Password").toString() == bufferPassword)
             message.append("Ok");
         else message.append("Incorrect password");

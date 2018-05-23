@@ -21,6 +21,12 @@ SignUpWindow::~SignUpWindow() {
 
 void SignUpWindow::slotConnected() {
     ui->errorLabel->setText("Connected");
+    qDebug() << "Connected";
+}
+
+void SignUpWindow::slotDisconnected() {
+    socket->close();
+    qDebug() << "Disconnected";
 }
 
 void SignUpWindow::slotSendToServer() {
