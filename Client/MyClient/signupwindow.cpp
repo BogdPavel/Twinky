@@ -47,7 +47,7 @@ void SignUpWindow::slotSendToServer() {
 void SignUpWindow::slotReadyRead() {
     qDebug() << "Read!";
     QDataStream serverReadStream(socket);
-    serverReadStream.setVersion(QDataStream::Qt_5_5);
+    serverReadStream.setVersion(QDataStream::Qt_4_5);
     while(true) {
         if (!nextBlockSize) {
             if (socket->bytesAvailable() < sizeof(quint16))
@@ -61,10 +61,15 @@ void SignUpWindow::slotReadyRead() {
         qDebug() << message;
         nextBlockSize = 0;
     }
-    if(message.compare(SignUpNewUser + " " + "Ok")) {
-        ui->errorSignUpLabel->setText(message);
+    if(!message.compare(SignUpNewUser + " " + "Ok")) {
+        this->close();
+        socket->disconnectFromHost();
+        MyClient *window = new MyClient();
+        window->show();
     }
-    else ui->errorSignUpLabel->setText(message);
+    else {
+        ui->errorSignUpLabel->setText(message.mid(3, message.length() - 3));
+    }
 }
 
 void SignUpWindow::onGetKeyButtonClicked() {

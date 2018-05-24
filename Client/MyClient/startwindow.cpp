@@ -50,13 +50,14 @@ void StartWindow::slotReadyRead() {
         qDebug() << message;
         nextBlockSize = 0;
     }
-    if(message.compare(CheckUsernameAndPassword + " " + "Ok")) {
-//        MyClient window;
-//        window.show();
-        ui->answerLabel->setText(message);
+    if(!message.compare(CheckUsernameAndPassword + " " + "Ok")) {
+        this->close();
+        socket->disconnectFromHost();
+        MyClient *window = new MyClient();
+        window->show();
     }
     else {
-        ui->answerLabel->setText(message);
+        ui->answerLabel->setText(message.mid(3, message.length() - 3));
     }
 }
 
@@ -75,6 +76,9 @@ void StartWindow::slotSendToServer() {
 }
 
 void StartWindow::onSignUpButtonClicked() {
+    this->close();
+    socket->disconnectFromHost();
     SignUpWindow window;
     window.exec();
+
 }

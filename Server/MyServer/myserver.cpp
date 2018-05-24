@@ -46,7 +46,7 @@ void MyServer::slotReadyRead() {
 }
 
 void MyServer::slotDisconnected() {
-    //
+    qDebug() << "Disconnect";
 }
 
 
@@ -65,9 +65,10 @@ void MyServer::checkUserInDB(QTcpSocket * clientSocket) {
     bufferPassword.append(message.mid(i, message.length() - i));
     message.clear();
     QSqlQuery query = QSqlQuery(usersDB);
-    if(query.exec("select Password from user where Username = \'" + bufferUsername + "\'")) {
-        qDebug() << query.value(0).toString();
-        if(query.value(0).toString() == bufferPassword)
+    query.exec("select username, password from user where Username = \'" + bufferUsername + "\'");
+    query.next();
+    if(query.value(0).toString() == bufferUsername) {
+        if(query.value(1).toString() == bufferPassword)
             message.append("Ok");
         else message.append("Incorrect password");
     }
@@ -121,4 +122,5 @@ void MyServer::sendToClient(QString code, QTcpSocket * clientSocket) {
     out << quint16(arrBlock.size() - sizeof(quint16));
     qDebug() << str;
     clientSocket->write(arrBlock);
+    //clientSocket->disconnectFromHost();
 }
