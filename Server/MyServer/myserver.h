@@ -11,13 +11,18 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QSqlTableModel>
+#include <QTableView>
 
 const QString CheckUsernameAndPassword("11");
 const QString SignUpNewUser("13");
+const QString GetUserInformation("15");
+const QString GetChatHistory("17");
 
 enum MessageCode {
     SignIn = 11,
-    SignUp = 13
+    SignUp = 13,
+    GetUserInfo = 15,
+    GetHistory = 17
 };
 
 class MyServer: public QTcpServer {
@@ -34,12 +39,17 @@ private:
     int messageCode;
     QSqlDatabase usersDB;
 
+    QSet<QTcpSocket *> clients;
+    QMap<QTcpSocket *, QString> users;
+
 private slots:
     void slotReadyRead();
     void slotDisconnected();
     void checkUserInDB(QTcpSocket * );
     void signUpNewUser(QTcpSocket * );
+    void getUserInfo(QTcpSocket * , QString);
     void sendToClient(QString, QTcpSocket * );
+    void returnChatHistory(QTcpSocket * );
 
 };
 
