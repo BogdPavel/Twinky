@@ -5,7 +5,7 @@ SignUpWindow::SignUpWindow(QWidget *parent) :
     QDialog(parent), ui(new Ui::SignUpWindow) {
     ui->setupUi(this);
     socket = new QTcpSocket(this);
-    socket->connectToHost(QHostAddress::LocalHost, 2323);
+    socket->connectToHost(QHostAddress::LocalHost, 80);
     connect(ui->getKeyButton, SIGNAL(clicked(bool)),
             this, SLOT(onGetKeyButtonClicked()));
     connect(ui->signUpButton, SIGNAL(clicked(bool)),
@@ -25,7 +25,6 @@ void SignUpWindow::slotConnected() {
 }
 
 void SignUpWindow::slotDisconnected() {
-    socket->close();
     qDebug() << "Disconnected";
 }
 
@@ -35,7 +34,7 @@ void SignUpWindow::slotSendToServer() {
                     ui->passwordLine->text() + " " + ui->emailLine->text());
         QByteArray arrBlock;
         QDataStream out(&arrBlock, QIODevice::WriteOnly);
-        out.setVersion(QDataStream::Qt_5_5);
+        out.setVersion(QDataStream::Qt_4_5);
         out << quint16(0) << str;
         out.device()->seek(0);
         out << quint16(arrBlock.size() - sizeof(quint16));
@@ -58,18 +57,17 @@ void SignUpWindow::slotReadyRead() {
             break;
         }
         serverReadStream >> message;
-        qDebug() << message;
         nextBlockSize = 0;
     }
     if(!message.compare(SignUpNewUser + " " + "Ok")) {
         this->close();
         socket->disconnectFromHost();
-        MyClient *window = new MyClient();
+        MyClient *window = new MyClient(ui->nameSurnameLine->text(),
+                                        ui->usernameLine->text(),
+                                        ui->emailLine->text());
         window->show();
     }
-    else {
-        ui->errorSignUpLabel->setText(message.mid(3, message.length() - 3));
-    }
+    else ui->errorSignUpLabel->setText(message.mid(3, message.length() - 3));
 }
 
 void SignUpWindow::onGetKeyButtonClicked() {

@@ -36,7 +36,6 @@ void StartWindow::slotReadyRead() {
     qDebug() << "Read!";
     QDataStream serverReadStream(socket);
     serverReadStream.setVersion(QDataStream::Qt_4_5);
-    qDebug() << "Before cycle" << nextBlockSize;
     while(true) {
         if (!nextBlockSize) {
             if (socket->bytesAvailable() < sizeof(quint16))
@@ -47,13 +46,12 @@ void StartWindow::slotReadyRead() {
             break;
         }
         serverReadStream >> message;
-        qDebug() << message;
         nextBlockSize = 0;
     }
     if(!message.compare(CheckUsernameAndPassword + " " + "Ok")) {
         this->close();
         socket->disconnectFromHost();
-        MyClient *window = new MyClient();
+        MyClient *window = new MyClient(ui->usernameLine->text());
         window->show();
     }
     else {
@@ -70,7 +68,6 @@ void StartWindow::slotSendToServer() {
         out << quint16(0) << str;
         out.device()->seek(0);
         out << quint16(arrBlock.size() - sizeof(quint16));
-        qDebug() << str;
         socket->write(arrBlock);
     }
 }

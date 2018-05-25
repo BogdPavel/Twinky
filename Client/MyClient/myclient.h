@@ -7,6 +7,17 @@
 
 const QString CheckUsernameAndPassword("11");
 const QString SignUpNewUser("13");
+const QString GetUserInformation("15");
+const QString GetChatHistory("17");
+const QString SendChatMessage("19");
+
+enum MessageCode {
+    SignIn = 11,
+    SignUp = 13,
+    GetUserInfo = 15,
+    GetHistory = 17,
+    SendMessage = 19
+};
 
 namespace Ui {
 class MyClient;
@@ -17,12 +28,17 @@ class MyClient : public QMainWindow {
 
 public:
     explicit MyClient(QWidget *parent = 0);
+    MyClient(QString username, QWidget *parent = 0);
+    MyClient(QString nameSurname, QString username, QString email, QWidget *parent = 0);
     ~MyClient();
 
 private:
     Ui::MyClient *ui;
     QTcpSocket * socket;
     quint16 nextBlockSize;
+    int messageCode;
+    QString socketMessage;
+    QString chatMessage;
 
 private slots:
     void onAboutButtonClicked();
@@ -39,6 +55,12 @@ private slots:
     void onEmailButtonClicked();
     void onMobileButtonClicked();
     void onBioButtonClicked();
+    void onSayButtonClicked();
+
+    void getChatHistoryQuery();
+    void sendToServer();
+    void writeDownHistory();
+    void writeDownUserInformation();
 
     void slotReadyRead();
     void clotConnected();
