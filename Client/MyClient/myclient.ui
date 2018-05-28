@@ -235,7 +235,7 @@ background-color: grey;</string>
      <property name="title">
       <string/>
      </property>
-     <widget class="QTextEdit" name="textEdit">
+     <widget class="QTextEdit" name="chat">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -291,7 +291,7 @@ background-color: grey;</string>
        <string>Say</string>
       </property>
      </widget>
-     <widget class="QTextEdit" name="messageLine">
+     <widget class="QLineEdit" name="messageLine">
       <property name="geometry">
        <rect>
         <x>10</x>

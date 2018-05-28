@@ -38,7 +38,6 @@ private:
     quint16 nextBlockSize;
     int messageCode;
     QString socketMessage;
-    QString chatMessage;
 
 private slots:
     void onAboutButtonClicked();
@@ -57,13 +56,18 @@ private slots:
     void onBioButtonClicked();
     void onSayButtonClicked();
 
+    void constructor();
+
+    void writeDownMessageInChat();
+    void sendMessageFromUser();
+
     void getChatHistoryQuery();
-    void sendToServer();
     void writeDownHistory();
+
     void writeDownUserInformation();
 
+    void sendToServer();
     void slotReadyRead();
-    void clotConnected();
 };
 
 #endif // MYCLIENT_H

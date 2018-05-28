@@ -1,19 +1,21 @@
 #include "myserver.h"
 
 MyServer::MyServer(QObject * parent): QTcpServer(parent), nextBlockSize(0) {
-    if(this->listen(QHostAddress::Any, 80)) {
-        qDebug() << "Listening port " << this->serverPort();
-    }
-    else {
-        qDebug() << "No Listening";
-    }
-    usersDB = QSqlDatabase::addDatabase("QMYSQL"); usersDB.setHostName("127.0.0.1");
-    usersDB.setDatabaseName("chatusers"); usersDB.setUserName("root"); usersDB.setPassword("pavel");
-    if(!usersDB.open()) {
-        qDebug() << usersDB.lastError().text();
-        //Send message with problem to clients
-    }
-    else qDebug() << "Success DB!";
+    this->listen(QHostAddress::Any, 80);
+    usersDB = QSqlDatabase::addDatabase("QMYSQL");
+    usersDB.setHostName("127.0.0.1");
+    usersDB.setDatabaseName("chatusers");
+    usersDB.setUserName("root");
+    usersDB.setPassword("pavel");
+    usersDB.open();
+
+    historyDB = QSqlDatabase::addDatabase("QMYSQL");
+    historyDB.setHostName("127.0.0.1");
+    historyDB.setDatabaseName("chathistory");
+    historyDB.setUserName("root");
+    historyDB.setPassword("pavel");
+    historyDB.open();
+
 }
 
 void MyServer::incomingConnection(qintptr handle) {
@@ -92,9 +94,7 @@ void MyServer::checkUserInDB(QTcpSocket * clientSocket) {
             message.append("Ok");
         else message.append("Incorrect password");
     }
-    else {
-        message.append("Username error");
-    }
+    else message.append("Username error");
     sendToClient(CheckUsernameAndPassword, clientSocket);
 }
 
@@ -124,6 +124,11 @@ void MyServer::signUpNewUser(QTcpSocket * clientSocket) {
                    bufferUsername + "\',\'" + bufferNameSurname + "\',\'" + bufferPassword + "\')");
         query.exec("insert into userInfo (Username, Email) values (\'" +
                    bufferUsername + "\',\'" + bufferEmail + "\')");
+        QSqlQuery query = QSqlQuery(historyDB);
+        query.exec("select max(id) from history");
+        query.next();
+        QString start(query.value(0).toInt() + 1);
+        query.exec("insert into user(start, username) values (" + start + ",\'" + bufferUsername + "\'");
         message.clear();
         message.append("Ok");
     }

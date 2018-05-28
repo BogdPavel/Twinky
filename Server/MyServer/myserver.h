@@ -38,6 +38,7 @@ private:
     QString message;
     int messageCode;
     QSqlDatabase usersDB;
+    QSqlDatabase historyDB;
 
     QSet<QTcpSocket *> clients;
     QMap<QTcpSocket *, QString> users;

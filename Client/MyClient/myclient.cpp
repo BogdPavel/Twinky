@@ -4,24 +4,15 @@
 MyClient::MyClient(QWidget *parent) :
     QMainWindow(parent), ui(new Ui::MyClient), nextBlockSize(0) {
     ui->setupUi(this);
-    socket = new QTcpSocket(this);
-    socket->connectToHost(QHostAddress::LocalHost, 80);
-    connect(ui->aboutButton, SIGNAL(clicked(bool)), this, SLOT(onAboutButtonClicked()));
 
-
-    getChatHistoryQuery();
+    //getChatHistoryQuery();
 }
 
 MyClient::MyClient(QString username, QWidget *parent) :
     QMainWindow(parent), ui(new Ui::MyClient), nextBlockSize(0) {
     ui->setupUi(this);
     ui->usernameButton->setText(username);
-    socket = new QTcpSocket(this);
-    socket->connectToHost(QHostAddress::LocalHost, 80);
-    connect(ui->aboutButton, SIGNAL(clicked(bool)), this, SLOT(onAboutButtonClicked()));
-    connect(socket, SIGNAL(readyRead()), this, SLOT(slotReadyRead()));
-    connect(ui->sayButton, SIGNAL(clicked(bool), this, SLOT(onSayButtonClicked()));
-
+    constructor();
     socketMessage.append(GetUserInformation + " " + username);
     sendToServer();
 
@@ -34,12 +25,18 @@ MyClient::MyClient(QString nameSurname, QString username, QString email, QWidget
     ui->nameSurnameButton->setText(nameSurname);
     ui->usernameButton->setText(username);
     ui->emailButton->setText(email);
+    constructor();
+
+    //getChatHistoryQuery();
+}
+
+void MyClient::constructor() {
     socket = new QTcpSocket(this);
     socket->connectToHost(QHostAddress::LocalHost, 80);
+    connect(socket, SIGNAL(readyRead()), this, SLOT(slotReadyRead()));
+    connect(ui->messageLine, SIGNAL(returnPressed()), this, SLOT(sendMessageFromUser()));
     connect(ui->aboutButton, SIGNAL(clicked(bool)), this, SLOT(onAboutButtonClicked()));
-
-
-    getChatHistoryQuery();
+    connect(ui->sayButton, SIGNAL(clicked(bool), this, SLOT(sendMessageFromUser()));
 }
 
 MyClient::~MyClient() {
@@ -143,8 +140,8 @@ void MyClient::slotReadyRead() {
     QString buffer(socketMessage.at(0));
     buffer += socketMessage.at(1);
     messageCode = buffer.toInt();
-    qDebug() << messageCode;
     switch(messageCode) {
+    case SendMessage: writeDownMessageInChat(); break;
     case GetUserInfo: writeDownUserInformation(); break;
     case GetHistory: writeDownHistory(); break;
     }
@@ -169,11 +166,21 @@ void MyClient::writeDownUserInformation() {
 
 }
 
-void MyClient::writeDownHistory() {
-
+void MyClient::sendMessageFromUser() {
+    if(!ui->messageLine->text().isEmpty()) {
+        socketMessage.clear();
+        socketMessage.append(SendChatMessage + " " + ui->messageLine->text());
+        sendToServer();
+        ui->messageLine->setText("");
+        ui->messageLine->setFocus();
+    }
 }
 
-void MyClient::clotConnected() {
+void MyClient::writeDownMessageInChat() {
+    ui->chat->append(socketMessage.mid(3, socketMessage.length() - 3));
+}
+
+void MyClient::writeDownHistory() {
 
 }
 
