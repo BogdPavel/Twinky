@@ -17,12 +17,16 @@ const QString CheckUsernameAndPassword("11");
 const QString SignUpNewUser("13");
 const QString GetUserInformation("15");
 const QString GetChatHistory("17");
+const QString SendChatMessage("19");
+const QString GetChatPosition("21");
 
 enum MessageCode {
     SignIn = 11,
     SignUp = 13,
     GetUserInfo = 15,
-    GetHistory = 17
+    GetHistory = 17,
+    SendMessage = 19,
+    GetChatPos = 21
 };
 
 class MyServer: public QTcpServer {
@@ -38,7 +42,6 @@ private:
     QString message;
     int messageCode;
     QSqlDatabase usersDB;
-    QSqlDatabase historyDB;
 
     QSet<QTcpSocket *> clients;
     QMap<QTcpSocket *, QString> users;
@@ -48,9 +51,11 @@ private slots:
     void slotDisconnected();
     void checkUserInDB(QTcpSocket * );
     void signUpNewUser(QTcpSocket * );
-    void getUserInfo(QTcpSocket * , QString);
+    void getUserInfo(QTcpSocket *, QString);
     void sendToClient(QString, QTcpSocket * );
-    void returnChatHistory(QTcpSocket * );
+    void returnChatHistory(QTcpSocket *);
+    void returnChatPosition(QTcpSocket *, QString);
+    void sendChatMessageToUsers(QString );
 
 };
 

@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Stream</string>
+   <string>Twinky</string>
   </property>
   <property name="styleSheet">
    <string notr="true"/>
@@ -243,6 +243,9 @@ background-color: grey;</string>
         <width>440</width>
         <height>320</height>
        </rect>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
       </property>
      </widget>
     </widget>

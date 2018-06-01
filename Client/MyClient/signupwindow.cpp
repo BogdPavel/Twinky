@@ -12,6 +12,8 @@ SignUpWindow::SignUpWindow(QWidget *parent) :
             this, SLOT(slotSendToServer()));
     connect(socket, SIGNAL(connected()),
             this, SLOT(slotConnected()));
+    connect(socket, SIGNAL(readyRead()),
+            this, SLOT(slotReadyRead()));
 }
 
 SignUpWindow::~SignUpWindow() {

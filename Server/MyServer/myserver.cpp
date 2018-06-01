@@ -2,25 +2,15 @@
 
 MyServer::MyServer(QObject * parent): QTcpServer(parent), nextBlockSize(0) {
     this->listen(QHostAddress::Any, 80);
-    usersDB = QSqlDatabase::addDatabase("QMYSQL");
-    usersDB.setHostName("127.0.0.1");
-    usersDB.setDatabaseName("chatusers");
-    usersDB.setUserName("root");
-    usersDB.setPassword("pavel");
+    usersDB = QSqlDatabase::addDatabase("QSQLITE");
+    usersDB.setDatabaseName("D:/Course Projects/4-th semestr/Twinky/Server/MyServer/chatDataBase.db");
     usersDB.open();
-
-    historyDB = QSqlDatabase::addDatabase("QMYSQL");
-    historyDB.setHostName("127.0.0.1");
-    historyDB.setDatabaseName("chathistory");
-    historyDB.setUserName("root");
-    historyDB.setPassword("pavel");
-    historyDB.open();
-
 }
 
 void MyServer::incomingConnection(qintptr handle) {
     QTcpSocket * socket = new QTcpSocket();
     socket->setSocketDescriptor(handle);
+
     connect(socket, SIGNAL(readyRead()), this, SLOT(slotReadyRead()));
     connect(socket, SIGNAL(disconnected()), this, SLOT(slotDisconnected()));
 }
@@ -48,12 +38,38 @@ void MyServer::slotReadyRead() {
         bufferUsername.append(message.at(i));
         i++;
     }
+    qDebug() << messageCode;
     switch(messageCode) {
+    case SendMessage: sendChatMessageToUsers(bufferUsername); break;
     case SignIn: checkUserInDB(clientSocket); break;
     case SignUp: signUpNewUser(clientSocket); break;
     case GetUserInfo: getUserInfo(clientSocket, bufferUsername); break;
     case GetHistory: returnChatHistory(clientSocket); break;
+    case GetChatPos: returnChatPosition(clientSocket, bufferUsername); break;
     }
+}
+
+void MyServer::sendChatMessageToUsers(QString username) {
+    int i = 2;
+    while(message.at(++i) != ' '); i++;
+    QString time(QTime::currentTime().toString().mid(0, 8));
+
+    QSqlQuery query;
+    query.exec(QString("insert into userMessageHistory(username, time, message) values('%1', '%2', '%3')").
+               arg(username).arg(time).arg(message.mid(i, message.length() - i - 1)));
+
+    QString str(SendChatMessage + " " + username + " " + time + " " + " " +
+                message.mid(i, message.length() - i) + "\n\n");
+    QByteArray arrBlock;
+    QDataStream out(&arrBlock, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_4_5);
+    out << quint16(0) << str;
+    out.device()->seek(0);
+    out << quint16(arrBlock.size() - sizeof(quint16));
+    foreach(QTcpSocket* socket, clients)
+        socket->write(arrBlock);
+
+    qDebug() << str;
 }
 
 void MyServer::slotDisconnected() {
@@ -62,14 +78,44 @@ void MyServer::slotDisconnected() {
 
 
 void MyServer::returnChatHistory(QTcpSocket * clientSocket) {
-    QSqlDatabase historyDB = QSqlDatabase::addDatabase("QMYSQL"); historyDB.setHostName("127.0.0.1");
-    historyDB.setDatabaseName("chathistory"); historyDB.setUserName("root"); historyDB.setPassword("pavel");
-    QSqlTableModel * historyModel = new QSqlTableModel(this, historyDB);
-    historyModel->setTable("history");
-    historyModel->select();
+    clients.insert(clientSocket);
+    int position, i = 2;
+    while(message.at(++i) != ' ');
+    i++;
+    position = message.mid(i, message.length() - i).toInt();
+    qDebug() << position;
+    message.clear();
+    QSqlQuery query;
+    if(!query.exec("select max(id) from userMessageHistory"))
+        qDebug() << query.lastError();
+    query.next();
+    int last = query.value(0).toInt();
+    qDebug() << last;
+    if(position < last) {
+        QSqlQuery query;
+        if(!query.exec("select * from userMessageHistory where id > " + QString::number(position)))
+             qDebug() << query.lastError();
+        while(query.next()) {
+            message.append(query.value(1).toString() + " ");
+            message.append(query.value(2).toString() + " ");
+            message.append(query.value(3).toString() + "\n");
+        }
+    }
+    qDebug() << message;
+    sendToClient(GetChatHistory, clientSocket);
+}
 
-    QTableView * view = new QTableView;
-    view->setModel(historyModel);
+void MyServer::returnChatPosition(QTcpSocket * clientSocket, QString username) {
+    clients.insert(clientSocket);
+    message.clear();
+    message.append(SendChatMessage + " ADMIN " + username + " joined the chat");
+    QSqlQuery query;
+    query.exec("select max(id) from userMessageHistory");
+    query.next();
+    int last = query.value(0).toInt();
+    message.clear();
+    message.append(QString::number(last));
+    sendToClient(GetChatPosition, clientSocket);
 }
 
 void MyServer::checkUserInDB(QTcpSocket * clientSocket) {
@@ -86,8 +132,8 @@ void MyServer::checkUserInDB(QTcpSocket * clientSocket) {
     }
     bufferPassword.append(message.mid(i, message.length() - i));
     message.clear();
-    QSqlQuery query = QSqlQuery(usersDB);
-    query.exec("select username, password from user where Username = \'" + bufferUsername + "\'");
+    QSqlQuery query;
+    query.exec("select username, password from user where username = \'" + bufferUsername + "\'");
     query.next();
     if(query.value(0).toString() == bufferUsername) {
         if(query.value(1).toString() == bufferPassword)
@@ -109,8 +155,9 @@ void MyServer::signUpNewUser(QTcpSocket * clientSocket) {
         bufferUsername.append(message.at(i));
         i++;
     }
-    QSqlQuery query = QSqlQuery(usersDB);
-    query.exec("select Username from user where Username = \'" + bufferUsername + "\'");
+    QSqlQuery query;
+    if(!query.exec("select username from user where username = \'" + bufferUsername + "\'"))
+        qDebug() << query.lastError();
     query.next();
     if(query.value(0).toString() != bufferUsername) {
         int j = message.length();
@@ -120,15 +167,10 @@ void MyServer::signUpNewUser(QTcpSocket * clientSocket) {
         while(message.at(--j) != ' ');
         QString bufferPassword(message.mid(j + 1, z - j));
         QString bufferNameSurname(message.mid(i, j - i));
-        query.exec("insert into user (Username, NameSurname, Password) values (\'" +
-                   bufferUsername + "\',\'" + bufferNameSurname + "\',\'" + bufferPassword + "\')");
-        query.exec("insert into userInfo (Username, Email) values (\'" +
-                   bufferUsername + "\',\'" + bufferEmail + "\')");
-        QSqlQuery query = QSqlQuery(historyDB);
-        query.exec("select max(id) from history");
-        query.next();
-        QString start(query.value(0).toInt() + 1);
-        query.exec("insert into user(start, username) values (" + start + ",\'" + bufferUsername + "\'");
+        query.exec(QString("insert into user (username, namesurname, password) values ('%1', '%2', '%3')").
+                   arg(bufferUsername).arg(bufferNameSurname).arg(bufferPassword));
+        query.exec(QString("insert into userinfo (username, email) values ('%1', '%2')").
+                   arg(bufferUsername).arg(bufferEmail));
         message.clear();
         message.append("Ok");
     }
@@ -140,19 +182,19 @@ void MyServer::signUpNewUser(QTcpSocket * clientSocket) {
 }
 
 void MyServer::getUserInfo(QTcpSocket * clientSocket, QString bufferUsername) {
-    QSqlQuery query = QSqlQuery(usersDB);
-    query.exec("select * from user where Username = \'" + bufferUsername + "\'");
+    QSqlQuery query;
+    query.exec("select * from user where username = \'" + bufferUsername + "\'");
     query.next();
     message.clear();
     message.append(query.value(1).toString() + " ");
-    query.exec("select * from userInfo where Username = \'" + bufferUsername + "\'");
+    query.exec("select * from userinfo where username = \'" + bufferUsername + "\'");
     query.next();
     message.append(query.value(1).toString() + " ");
     if(!query.value(2).toString().isEmpty())
-        message.append(query.value(2).toString() + " ");
-    else message.append("0 ");
+        message.append(query.value(2).toString() + "! ");
+    else message.append("?! ");
     if(!query.value(3).toString().isEmpty())
-        message.append(query.value(3).toString() + " ");
+        message.append(query.value(3).toString());
     else message.append("0");
     sendToClient(GetUserInformation, clientSocket);
 }
