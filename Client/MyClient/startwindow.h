@@ -24,6 +24,7 @@ private:
     QTcpSocket * socket;
     quint16 nextBlockSize;
     QString message;
+    QString address;
 
 private slots:
     void onSignUpButtonClicked();

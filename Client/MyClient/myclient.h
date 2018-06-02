@@ -2,18 +2,19 @@
 #define MYCLIENT_H
 
 #include <QMainWindow>
-#include <QHostAddress>
 #include <QTcpSocket>
 #include <QtSql>
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QTimer>
 #include <QTime>
+#include <QHostAddress>
 
 const QString CheckUsernameAndPassword("11");
 const QString SignUpNewUser("13");
 const QString GetUserInformation("15");
-const QString GetChatHistory("17");
+const QString GetChatHistoryIndex("17");
+const QString GetChatHistoryUsername("18");
 const QString SendChatMessage("19");
 const QString GetChatPosition("21");
 
@@ -21,7 +22,8 @@ enum MessageCode {
     SignIn = 11,
     SignUp = 13,
     GetUserInfo = 15,
-    GetHistory = 17,
+    GetHistoryIndex = 17,
+    GetHistoryUsername = 18,
     SendMessage = 19,
     GetChatPos = 21
 };
@@ -34,7 +36,6 @@ class MyClient : public QMainWindow {
     Q_OBJECT
 
 public:
-    explicit MyClient(QWidget *parent = 0);
     MyClient(QString username, QWidget *parent = 0);
     MyClient(QString nameSurname, QString username, QString email, QWidget *parent = 0);
     ~MyClient();
@@ -47,9 +48,10 @@ private:
     int messageCode;
     QString socketMessage;
     QSqlDatabase historyDB;
+    QString address;
 
 private slots:
-    void onAboutButtonClicked();
+    /*void onAboutButtonClicked();
     void onSettingsButtonClicked();
     void onLogOutButtonClicked();
     void onNumberOfUsersButtonClicked();
@@ -63,14 +65,15 @@ private slots:
     void onEmailButtonClicked();
     void onMobileButtonClicked();
     void onBioButtonClicked();
-    void onSayButtonClicked();
+    void onSayButtonClicked();*/
 
     void constructor();
 
     void writeDownMessageInChat();
     void sendMessageFromUser();
 
-    void getChatHistoryQuery(int );
+    void getChatHistoryQueryUsername();
+    void getChatHistoryQueryIndex(int );
     void writeDownHistory();
 
     void downloadHistoryFromDB();
@@ -79,6 +82,7 @@ private slots:
 
     void sendToServer();
     void slotReadyRead();
+    void slotDisconnected();
 };
 
 #endif // MYCLIENT_H

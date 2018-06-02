@@ -16,7 +16,8 @@
 const QString CheckUsernameAndPassword("11");
 const QString SignUpNewUser("13");
 const QString GetUserInformation("15");
-const QString GetChatHistory("17");
+const QString GetChatHistoryIndex("17");
+const QString GetChatHistoryUsername("18");
 const QString SendChatMessage("19");
 const QString GetChatPosition("21");
 
@@ -24,7 +25,8 @@ enum MessageCode {
     SignIn = 11,
     SignUp = 13,
     GetUserInfo = 15,
-    GetHistory = 17,
+    GetHistoryIndex = 17,
+    GetHistoryUsername = 18,
     SendMessage = 19,
     GetChatPos = 21
 };
@@ -53,7 +55,8 @@ private slots:
     void signUpNewUser(QTcpSocket * );
     void getUserInfo(QTcpSocket *, QString);
     void sendToClient(QString, QTcpSocket * );
-    void returnChatHistory(QTcpSocket *);
+    void returnChatHistoryIndex(QTcpSocket *);
+    void returnChatHistoryUsername(QTcpSocket *, QString);
     void returnChatPosition(QTcpSocket *, QString);
     void sendChatMessageToUsers(QString );
 

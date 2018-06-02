@@ -28,23 +28,20 @@ void MyServer::slotReadyRead() {
         clientReadStream >> message;
         nextBlockSize = 0;
     }
-    QString buffer(message.at(0));
-    buffer += message.at(1);
-    messageCode = buffer.toInt();
-    qDebug() << messageCode;
+    messageCode = message.mid(0, 2).toInt();
     QString bufferUsername;
     int i = 3;
     while(i < message.length() && message.at(i) != ' ') {
         bufferUsername.append(message.at(i));
         i++;
     }
-    qDebug() << messageCode;
     switch(messageCode) {
     case SendMessage: sendChatMessageToUsers(bufferUsername); break;
     case SignIn: checkUserInDB(clientSocket); break;
     case SignUp: signUpNewUser(clientSocket); break;
     case GetUserInfo: getUserInfo(clientSocket, bufferUsername); break;
-    case GetHistory: returnChatHistory(clientSocket); break;
+    case GetHistoryIndex: returnChatHistoryIndex(clientSocket); break;
+    case GetHistoryUsername: returnChatHistoryUsername(clientSocket, bufferUsername); break;
     case GetChatPos: returnChatPosition(clientSocket, bufferUsername); break;
     }
 }
@@ -57,7 +54,6 @@ void MyServer::sendChatMessageToUsers(QString username) {
     QSqlQuery query;
     query.exec(QString("insert into userMessageHistory(username, time, message) values('%1', '%2', '%3')").
                arg(username).arg(time).arg(message.mid(i, message.length() - i - 1)));
-
     QString str(SendChatMessage + " " + username + " " + time + " " + " " +
                 message.mid(i, message.length() - i) + "\n\n");
     QByteArray arrBlock;
@@ -77,32 +73,38 @@ void MyServer::slotDisconnected() {
 }
 
 
-void MyServer::returnChatHistory(QTcpSocket * clientSocket) {
+void MyServer::returnChatHistoryIndex(QTcpSocket * clientSocket) {
     clients.insert(clientSocket);
     int position, i = 2;
-    while(message.at(++i) != ' ');
-    i++;
+    while(message.at(++i) != ' '); i++;
     position = message.mid(i, message.length() - i).toInt();
-    qDebug() << position;
     message.clear();
     QSqlQuery query;
-    if(!query.exec("select max(id) from userMessageHistory"))
-        qDebug() << query.lastError();
-    query.next();
+    query.exec("select max(id) from userMessageHistory"); query.next();
     int last = query.value(0).toInt();
-    qDebug() << last;
     if(position < last) {
-        QSqlQuery query;
-        if(!query.exec("select * from userMessageHistory where id > " + QString::number(position)))
-             qDebug() << query.lastError();
+        query.exec("select * from userMessageHistory where id > " + QString::number(position));
         while(query.next()) {
             message.append(query.value(1).toString() + " ");
             message.append(query.value(2).toString() + " ");
             message.append(query.value(3).toString() + "\n");
         }
     }
-    qDebug() << message;
-    sendToClient(GetChatHistory, clientSocket);
+    sendToClient(GetChatHistoryIndex, clientSocket);
+}
+
+void MyServer::returnChatHistoryUsername(QTcpSocket * clientSocket, QString username) {
+    message.clear();
+    QSqlQuery query;
+    query.exec(QString("select start from userMessageHistoryInfo where username = '%1'").arg(username)); query.next();
+    int position = query.value(0).toInt();
+    query.exec("select * from userMessageHistory where id > " + QString::number(position));
+    while(query.next()) {
+        message.append(query.value(1).toString() + " ");
+        message.append(query.value(2).toString() + " ");
+        message.append(query.value(3).toString() + "\n");
+    }
+    sendToClient(GetChatHistoryUsername, clientSocket);
 }
 
 void MyServer::returnChatPosition(QTcpSocket * clientSocket, QString username) {
@@ -110,9 +112,9 @@ void MyServer::returnChatPosition(QTcpSocket * clientSocket, QString username) {
     message.clear();
     message.append(SendChatMessage + " ADMIN " + username + " joined the chat");
     QSqlQuery query;
-    query.exec("select max(id) from userMessageHistory");
-    query.next();
+    query.exec("select max(id) from userMessageHistory"); query.next();
     int last = query.value(0).toInt();
+    query.exec(QString("insert into userMessageHistoryInfo (start, username) values (%1, '%2')").arg(last).arg(username));
     message.clear();
     message.append(QString::number(last));
     sendToClient(GetChatPosition, clientSocket);
@@ -156,9 +158,7 @@ void MyServer::signUpNewUser(QTcpSocket * clientSocket) {
         i++;
     }
     QSqlQuery query;
-    if(!query.exec("select username from user where username = \'" + bufferUsername + "\'"))
-        qDebug() << query.lastError();
-    query.next();
+    query.exec("select username from user where username = \'" + bufferUsername + "\'"); query.next();
     if(query.value(0).toString() != bufferUsername) {
         int j = message.length();
         while(message.at(--j) != ' ');

@@ -26,6 +26,7 @@ private:
     QString secretCode;
     QString message;
     quint16 nextBlockSize;
+    QString address;
 
 private slots:
     void slotConnected();

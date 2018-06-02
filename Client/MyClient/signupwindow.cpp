@@ -4,8 +4,9 @@
 SignUpWindow::SignUpWindow(QWidget *parent) :
     QDialog(parent), ui(new Ui::SignUpWindow) {
     ui->setupUi(this);
+    address = "93.125.49.244";
     socket = new QTcpSocket(this);
-    socket->connectToHost(QHostAddress::LocalHost, 80);
+    socket->connectToHost(address, 80);
     connect(ui->getKeyButton, SIGNAL(clicked(bool)),
             this, SLOT(onGetKeyButtonClicked()));
     connect(ui->signUpButton, SIGNAL(clicked(bool)),
