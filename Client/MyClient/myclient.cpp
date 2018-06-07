@@ -1,37 +1,39 @@
 #include "myclient.h"
 #include "ui_myclient.h"
 
-MyClient::MyClient(QString username, QWidget *parent) :
+MyClient::MyClient(QWidget *parent) :
     QMainWindow(parent), ui(new Ui::MyClient), nextBlockSize(0) {
     ui->setupUi(this);
-    this->username = username;
+    this->setVisible(false);
+    this->setAttribute(Qt::WA_QuitOnClose);
+    StartWindow window; window.exec();
+    this->username = window.getUsername();
     ui->usernameButton->setText(username);
-    constructor();
-
-    socketMessage.append(GetUserInformation + " " + username);
-    sendToServer();
-
-    QTimer::singleShot(500, this, SLOT(downloadHistoryFromDB()));
-
-}
-
-MyClient::MyClient(QString nameSurname, QString username, QString email, QWidget *parent):
-    QMainWindow(parent), ui(new Ui::MyClient), nextBlockSize(0) {
-    ui->setupUi(this);
-    this->username = username;
-    ui->nameSurnameButton->setText(nameSurname);
-    ui->usernameButton->setText(username);
-    ui->emailButton->setText(email);
-    constructor();
-    socketMessage.append(GetChatPosition + " " + username);
-    sendToServer();
+    if(!username.isEmpty()) {
+        if(window.getEmail().isEmpty()) {
+            this->setVisible(true);
+            constructor();
+            socketMessage.append(GetUserInformation + " " + username);
+            sendToServer();
+            QTimer::singleShot(500, this, SLOT(downloadHistoryFromDB()));
+        }
+        else {
+            this->setVisible(true);
+            ui->nameSurnameButton->setText(window.getNameSurname());
+            ui->emailButton->setText(window.getEmail());
+            constructor();
+            socketMessage.append(GetChatPosition + " " + username);
+            sendToServer();
+        }
+    }
+    else this->close();
 }
 
 void MyClient::constructor() {
     address = "93.125.49.244";
 
     socket = new QTcpSocket(this);
-    socket->connectToHost(address, 80);
+    socket->connectToHost(address, 4200);
 
     historyDB = QSqlDatabase::addDatabase("QSQLITE");
     historyDB.setDatabaseName(QCoreApplication::applicationDirPath() + "/chathistory.db");
@@ -40,20 +42,19 @@ void MyClient::constructor() {
     connect(socket, SIGNAL(disconnected()), this, SLOT(slotDisconnected()));
     connect(socket, SIGNAL(readyRead()), this, SLOT(slotReadyRead()));
     connect(ui->messageLine, SIGNAL(returnPressed()), this, SLOT(sendMessageFromUser()));
-    connect(ui->aboutButton, SIGNAL(clicked(bool)), this, SLOT(onAboutButtonClicked()));
+    //connect(ui->aboutButton, SIGNAL(clicked(bool)), this, SLOT(onAboutButtonClicked()));
     connect(ui->sayButton, SIGNAL(clicked(bool)), this, SLOT(sendMessageFromUser()));
 }
 
 void MyClient::slotDisconnected() {
     QSqlQuery query;
-    query.exec("delete from currentUser");
-    query.exec(QString("insert into currentUser(currentUser) values('%1')").arg(username));
+    qDebug() << query.exec("delete from currentUser");
+    qDebug() << query.exec(QString("insert into currentUser(user) values('%1')").arg(username));
 }
 
 MyClient::~MyClient() {    
     delete ui;
     delete socket;
-
 }
 
 /*void MyClient::onSayButtonClicked() {
@@ -144,13 +145,10 @@ void MyClient::slotReadyRead() {
     serverReadStream.setVersion(QDataStream::Qt_4_5);
     while(true) {
         if (!nextBlockSize) {
-            if (socket->bytesAvailable() < sizeof(quint16))
-                break;
+            if (socket->bytesAvailable() < sizeof(quint16)) break;
             serverReadStream >> nextBlockSize;
         }
-        if (socket->bytesAvailable() < nextBlockSize) {
-            break;
-        }
+        if (socket->bytesAvailable() < nextBlockSize) break;
         serverReadStream >> socketMessage;
         qDebug() << socketMessage;
         nextBlockSize = 0;
@@ -201,9 +199,12 @@ void MyClient::writeDownMessageInChat() {
 }
 
 void MyClient::writeDownHistory() {
-    int i = 3, z, j;
-    QString username, time, message;
+    int i = 2, k = 0, z, j;
+    QString username, time, message, start;
     QSqlQuery query;
+    while(socketMessage.at(++i) != " ");
+    start = socketMessage.mid(3, i - 3);
+    i++;
     while(i < socketMessage.length()) {
         z = i;
         while(socketMessage.at(++i) != ' ');
@@ -212,6 +213,12 @@ void MyClient::writeDownHistory() {
         i += 9; j = i;
         while(socketMessage.at(++i) != "\n");
         message = socketMessage.mid(j, i - j);
+        if(k == 0) {
+            query.exec(QString("insert into history(id, username, time, message) values(%1, '%2', '%3', '%4')").arg(start).arg(username).arg(time).arg(message));
+            k++;
+            if(i == socketMessage.length() - 1)break;
+            else continue;
+        }
         query.exec(QString("insert into history(username, time, message) values('%1', '%2', '%3')").arg(username).arg(time).arg(message));
         i++;
     }
@@ -220,27 +227,23 @@ void MyClient::writeDownHistory() {
         username = query.value(1).toString();
         time = query.value(2).toString();
         message = query.value(3).toString();
-        ui->chat->insertPlainText(username + " " + time + " " + message + "\n\n");
+        ui->chat->insertPlainText(username + " " + time + " " + message + "\n");
     }
 }
 
 void MyClient::downloadHistoryFromDB() {
-   QSqlQuery query;
-
+    QSqlQuery query;
    query.exec("select max(id) from history"); query.next();
    int i = query.value(0).toInt();
-
    query.exec("select * from currentUser"); query.next();
    QString currentUser = query.value(0).toString();
-
    if(currentUser == username) {
        getChatHistoryQueryIndex(i);
    }
    else {
-      query.exec(QString("delete from history where id <= %1").arg(i));
+      query.exec("delete from history");
       getChatHistoryQueryUsername();
    }
-
 }
 
 void MyClient::welcomeInChat() {

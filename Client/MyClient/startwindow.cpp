@@ -4,20 +4,14 @@
 StartWindow::StartWindow(QWidget *parent) :
     QDialog(parent), ui(new Ui::StartWindow), nextBlockSize(0) {
     ui->setupUi(this);
+    this->username.clear();
     address = "93.125.49.244";
     socket = new QTcpSocket(this);
-    socket->connectToHost(address, 80);
-    connect(socket, SIGNAL(connected()),
-            this, SLOT(slotConnected()));
-    connect(socket, SIGNAL(readyRead()),
-            this, SLOT(slotReadyRead()));
-    connect(socket, SIGNAL(disconnected()),
-            this, SLOT(slotDisconnected()));
-    connect(ui->logInButton, SIGNAL(clicked(bool)),
-            this, SLOT(slotSendToServer()));
-    connect(ui->signUpButton, SIGNAL(clicked(bool)),
-            this, SLOT(onSignUpButtonClicked()));
-
+    socket->connectToHost(address, 4200);
+    connect(socket, SIGNAL(connected()), this, SLOT(slotConnected()));
+    connect(socket, SIGNAL(readyRead()), this, SLOT(slotReadyRead()));
+    connect(ui->logInButton, SIGNAL(clicked(bool)), this, SLOT(slotSendToServer()));
+    connect(ui->signUpButton, SIGNAL(clicked(bool)), this, SLOT(onSignUpButtonClicked()));
 }
 
 StartWindow::~StartWindow() {
@@ -25,12 +19,20 @@ StartWindow::~StartWindow() {
     delete socket;
 }
 
-void StartWindow::slotConnected() {
-    ui->answerLabel->setText("Connection established");
+QString StartWindow::getUsername() {
+    return username;
 }
 
-void StartWindow::slotDisconnected() {
-    ui->answerLabel->setText("Disconnected");
+QString StartWindow::getNameSurname() {
+    return nameSurname;
+}
+
+QString StartWindow::getEmail() {
+    return email;
+}
+
+void StartWindow::slotConnected() {
+    ui->answerLabel->setText("Connection established");
 }
 
 void StartWindow::slotReadyRead() {
@@ -39,25 +41,19 @@ void StartWindow::slotReadyRead() {
     serverReadStream.setVersion(QDataStream::Qt_4_5);
     while(true) {
         if (!nextBlockSize) {
-            if (socket->bytesAvailable() < sizeof(quint16))
-                break;
+            if (socket->bytesAvailable() < sizeof(quint16)) break;
             serverReadStream >> nextBlockSize;
         }
-        if (socket->bytesAvailable() < nextBlockSize) {
-            break;
-        }
+        if (socket->bytesAvailable() < nextBlockSize) break;
         serverReadStream >> message;
         nextBlockSize = 0;
     }
     if(!message.compare(CheckUsernameAndPassword + " " + "Ok")) {
-        this->close();
         socket->disconnectFromHost();
-        MyClient *window = new MyClient(ui->usernameLine->text());
-        window->show();
+        username = ui->usernameLine->text();
+        this->close();
     }
-    else {
-        ui->answerLabel->setText(message.mid(3, message.length() - 3));
-    }
+    else ui->answerLabel->setText(message.mid(3, message.length() - 3));
 }
 
 void StartWindow::slotSendToServer() {
@@ -76,7 +72,8 @@ void StartWindow::slotSendToServer() {
 void StartWindow::onSignUpButtonClicked() {
     this->close();
     socket->disconnectFromHost();
-    SignUpWindow window;
-    window.exec();
-
+    SignUpWindow window; window.exec();
+    this->username = window.getUsername();
+    this->nameSurname = window.getNameSurname();
+    this->email = window.getEmail();
 }

@@ -9,6 +9,7 @@
 #include <QTimer>
 #include <QTime>
 #include <QHostAddress>
+#include "startwindow.h"
 
 const QString CheckUsernameAndPassword("11");
 const QString SignUpNewUser("13");
@@ -36,12 +37,10 @@ class MyClient : public QMainWindow {
     Q_OBJECT
 
 public:
-    MyClient(QString username, QWidget *parent = 0);
-    MyClient(QString nameSurname, QString username, QString email, QWidget *parent = 0);
+    MyClient(QWidget *parent = 0);
     ~MyClient();
 
 private:
-    QString username;
     Ui::MyClient *ui;
     QTcpSocket * socket;
     quint16 nextBlockSize;
@@ -49,6 +48,7 @@ private:
     QString socketMessage;
     QSqlDatabase historyDB;
     QString address;
+    QString username;
 
 private slots:
     /*void onAboutButtonClicked();

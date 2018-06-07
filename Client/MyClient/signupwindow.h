@@ -19,6 +19,9 @@ class SignUpWindow : public QDialog {
 public:
     explicit SignUpWindow(QWidget *parent = 0);
     ~SignUpWindow();
+    QString getUsername();
+    QString getNameSurname();
+    QString getEmail();
 
 private:
     Ui::SignUpWindow *ui;
@@ -27,6 +30,10 @@ private:
     QString message;
     quint16 nextBlockSize;
     QString address;
+
+    QString username;
+    QString nameSurname;
+    QString email;
 
 private slots:
     void slotConnected();

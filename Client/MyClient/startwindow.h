@@ -18,6 +18,9 @@ class StartWindow : public QDialog {
 public:
     explicit StartWindow(QWidget *parent = 0);
     ~StartWindow();
+    QString getUsername();
+    QString getNameSurname();
+    QString getEmail();
 
 private:
     Ui::StartWindow *ui;
@@ -26,12 +29,15 @@ private:
     QString message;
     QString address;
 
+    QString username;
+    QString nameSurname;
+    QString email;
+
 private slots:
     void onSignUpButtonClicked();
     void slotSendToServer();
     void slotConnected();
     void slotReadyRead();
-    void slotDisconnected();
 
 };
 
