@@ -51,13 +51,13 @@ private:
 private slots:
     void slotReadyRead();
     void slotDisconnected();
-    void checkUserInDB(QTcpSocket * );
+    void checkUserInDB(QTcpSocket * , QString , int );
     void signUpNewUser(QTcpSocket * );
-    void getUserInfo(QTcpSocket *, QString);
+    void getUserInfo(QTcpSocket * , QString );
     void sendToClient(QString, QTcpSocket * );
-    void returnChatHistoryIndex(QTcpSocket *);
-    void returnChatHistoryUsername(QTcpSocket *, QString);
-    void returnChatPosition(QTcpSocket *, QString);
+    void returnChatHistoryIndex(QTcpSocket * , int);
+    void returnChatHistoryUsername(QTcpSocket * , QString );
+    void returnChatPosition(QTcpSocket * , QString );
     void sendChatMessageToUsers(QString );
 
 };
